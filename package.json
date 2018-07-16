@@ -1,0 +1,24 @@
+{
+  "name": "VRChat App",
+  "version": "1.0.0",
+  "description": "Example VRChat companion app using the API",
+  "main": "./js/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [
+    "Electron",
+    "quick",
+    "start",
+    "tutorial",
+    "demo"
+  ],
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^2.0.0"
+  },
+  "dependencies": {
+    "electron-dl": "^1.12.0",
+    "electron-json-storage": "^4.1.0"
+  }
+}

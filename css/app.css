@@ -1,0 +1,530 @@
+body {
+	font-family: 'Ubuntu', sans-serif;
+	margin: 0;
+	background-color: #373737;
+}
+
+html, body {
+	height: 100%;
+}
+
+.sidenav {
+	height: 100%;
+	width: 0;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	background-color: #111;
+	overflow-x: hidden;
+	transition: 0.5s;
+	padding-top: 60px;
+}
+
+.sidenav .entry {
+	padding: 8px 8px 8px 32px;
+	text-decoration: none;
+	font-size: 32px;
+	color: #818181;
+	display: block;
+	transition: 0.3s;
+	cursor: pointer;
+}
+
+.sidenav a:hover {
+	color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+	position: absolute;
+	top: 16px;
+	right: 16px;
+}
+
+@media screen and (max-height: 450px) {
+	.sidenav {
+		padding-top: 15px;
+	}
+
+	.sidenav a {
+		font-size: 18px;
+	}
+}
+
+.entry .menu-icon {
+	margin-left: 8px;
+	display: none;
+	width: 24px;
+}
+
+.entry:hover .menu-icon {
+	display: inline-block;
+}
+
+.top-bar {
+	box-shadow: 0 -20px 16px 20px rgba(0, 0, 0, 0.5);
+	padding: 8px;
+	background-color: #141414;
+}
+
+.menu-btn {
+	color: #818181;
+	transition: 0.3s;
+}
+
+.menu-btn:hover {
+	color: #f1f1f1;
+}
+
+.loading-container {
+	position: fixed;
+	left: 50%;
+	bottom: 5%;
+	transform: translateX(-50%);
+	display: inline-table;
+	transition: opacity 0.3s;
+}
+
+.loading {
+	display: inline;
+	background-color: #ffffff;
+	padding: 8px;
+	font-size: 32px;
+	box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.75);
+}
+
+.popup-container {
+	opacity: 0;
+	position: fixed;
+	background-color: rgba(0, 0, 0, 0.50);
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -1;
+	transition: opacity 0.5s ease-in-out;
+}
+
+.popup {
+	display: block;
+	background-color: white;
+	margin-left: auto;
+	margin-right: auto;
+	width: 384px;
+	height: 448px;
+	margin-top: -500px;
+	box-shadow: 10px 10px 32px 0 rgba(0, 0, 0, 0.75);
+	transition: margin 0.3s ease-in-out;
+}
+
+.popup-info-container {
+	text-align: center;
+	padding: 16px;
+	font-size: 32px;
+}
+
+.user-list-container {
+	display: flex;
+	flex-flow: column;
+	align-items: center;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	margin-left: 32px;
+	margin-right: 32px;
+	height: 256px;
+	margin-top: 32px;
+	font-size: 24px;
+	box-shadow: 10px 10px 32px 0 rgba(0, 0, 0, 0.75);
+	background-color: #828282;
+}
+
+.user-list-entry {
+	text-align: center;
+	width: 100%;
+	padding: 4px;
+}
+
+.user-list-container a:nth-child(even) {
+	background-color: #696969;
+}
+
+.user-list-container a:nth-child(odd) {
+	background-color: #828282;
+}
+
+/* Me page start */
+
+.center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 32px;
+}
+
+.center-child {
+	box-shadow: 10px 10px 10px 0 rgba(0, 0, 0, 0.75);
+}
+
+.profile-picture-img {
+	width: 256px;
+	box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.75);
+}
+
+.welcome {
+	background-color: white;
+	padding: 32px;
+}
+
+.welcome-text-container {
+	text-align: center;
+	padding: 8px;
+}
+
+.welcome-text {
+	font-size: 32px;
+}
+
+.profile-picture {
+	padding: 8px;
+	width: 256px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.names {
+	display: grid;
+}
+
+.names a {
+	margin: auto;
+}
+
+.display-name {
+	font-size: 32px;
+}
+
+.user-name {
+	color: #373737;
+	font-size: 24px;
+}
+
+/* Friends page start */
+
+.friends-container {
+	padding: 16px;
+	display: flex;
+	grid-gap: 10px;
+	flex-flow: row wrap;
+	justify-content: center;
+	margin: 16px;
+}
+
+.friend-entry {
+	margin: 16px;
+	background-color: white;
+	padding: 8px;
+	box-shadow: 10px 10px 32px 0 rgba(0, 0, 0, 0.75);
+}
+
+.friend-image {
+	box-shadow: 2px 2px 16px 0 rgba(0, 0, 0, 0.5);
+	padding: 4px;
+	width: 256px;
+}
+
+.friend-world-container {
+	padding-top: 4px;
+	display: grid;
+	max-width: 256px;
+}
+
+.friend-world {
+	user-select: none;
+	font-size: 24px;
+	cursor: pointer;
+	transition: color 0.3s;
+}
+
+.friend-world-nothing {
+	user-select: none;
+	font-size: 24px;
+	cursor: pointer;
+	transition: color 0.3s;
+}
+
+.friend-world-nothing:active {
+	color: red;
+}
+
+.friend-world:hover {
+	color: #6cccfe;
+}
+
+.friend-world-instance {
+	font-size: 24px;
+}
+
+.friend-world-instance:before {
+	content: '#'
+}
+
+.friend-world-mode {
+	font-size: 16px;
+}
+
+.friend-world-container a {
+	width: 256px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	text-align: center;
+	margin: auto;
+	white-space: nowrap;
+}
+
+.friend-name-container {
+	font-size: 32px;
+	text-align: center;
+	padding-bottom: 4px;
+}
+
+/* Moderation start */
+
+.header-container {
+	font-size: 64px;
+	background-color: white;
+	text-align: center;
+	padding: 4px;
+	margin: 16px 16px 0;
+	box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.75);
+}
+
+.mine-header-container {
+	text-align: center;
+	font-size: 48px;
+}
+
+.against-header-container {
+	font-size: 48px;
+	text-align: center;
+}
+
+.moderation-container {
+	display: grid;
+}
+
+.card-container {
+	min-width: 0;
+	display: flex;
+	flex: 1;
+}
+
+.moderation-mine-container {
+	min-width: 0;
+	background-color: white;
+	padding: 8px;
+	margin: 16px 8px 16px 16px;
+	flex: 1;
+	box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.75);
+}
+
+.moderation-against-container {
+	min-width: 0;
+	background-color: white;
+	padding: 8px;
+	margin: 16px 16px 16px 8px;
+	flex: 1;
+	box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.75);
+}
+
+.icon-container {
+	display: inline;
+	margin-left: 8px;
+}
+
+.against-list {
+	margin-top: 16px;
+	padding: 4px;
+	box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.5);
+}
+
+.mine-list {
+	margin-top: 16px;
+	padding: 4px;
+	box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.5);
+}
+
+.icons-container {
+	margin-left: auto;
+	display: flex;
+	padding-top: 2px;
+	float: right;
+}
+
+.user-entry-container {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.user-entry {
+	display: flex;
+	padding: 8px;
+}
+
+.user-entry-name {
+	font-size: 32px;
+	padding-top: 2px;
+}
+
+.against-list .user-entry:nth-child(even) {
+	background-color: #696969;
+}
+
+.against-list .user-entry:nth-child(odd) {
+	background-color: #828282;
+}
+
+.mine-list .user-entry:nth-child(even) {
+	background-color: #696969;
+}
+
+.mine-list .user-entry:nth-child(odd) {
+	background-color: #828282;
+}
+
+.mute-icon {
+	width: 32px;
+	filter: drop-shadow(2px 2px 2px #222);
+}
+
+.block-icon {
+	width: 32px;
+	filter: drop-shadow(2px 2px 2px #222);
+}
+
+/* Avatars start */
+
+.avatars-container {
+	padding: 16px;
+	display: flex;
+	grid-gap: 10px;
+	flex-flow: row wrap;
+	justify-content: center;
+	margin: 16px;
+	margin-bottom: 64px;
+}
+
+.avatar-entry {
+	margin: 16px;
+	background-color: white;
+	padding: 8px;
+	box-shadow: 10px 10px 32px 0 rgba(0, 0, 0, 0.75);
+}
+
+.avatar-image {
+	box-shadow: 2px 2px 16px 0 rgba(0, 0, 0, 0.5);
+	padding: 4px;
+	width: 256px;
+}
+
+.avatar-status-container {
+	text-align: center;
+	padding-top: 4px;
+	display: grid;
+	max-width: 256px;
+}
+
+.avatar-release-status {
+	user-select: none;
+	font-size: 24px;
+	transition: color 0.3s;
+}
+
+.avatar-name-container {
+	font-size: 32px;
+	text-align: center;
+	padding-bottom: 4px;
+}
+
+.avatar-name {
+	text-overflow: ellipsis;
+	width: 256px;
+	display: block;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.dl-container {
+	margin-top: 8px;
+}
+
+.dl-logo {
+	width: 32px;
+	margin-bottom: -4px;
+}
+
+.dl-text {
+	user-select: none;
+	font-size: 32px;
+	margin-left: 8px;
+}
+
+.dl-button {
+	cursor: pointer;
+	padding: 8px;
+	background-color: #6cccfe;
+	transition: box-shadow 0.3s;
+}
+
+.dl-button:hover {
+	box-shadow: 2px 2px 16px 0 rgba(0, 0, 0, 0.5);
+}
+
+.page-nav-container {
+	display: flex;
+	bottom: 0;
+	height: 42px;
+	width: 100%;
+	position: fixed;
+	box-shadow: 0 20px 16px 20px rgba(0, 0, 0, 0.5);
+	padding: 8px;
+	background-color: #141414;
+	justify-content: space-between
+}
+
+.page-nav-next {
+	font-size: 24px;
+	cursor: pointer;
+	margin-right: 12px;
+	padding: 8px;
+	background-color: #6cccfe;
+	transition: box-shadow 0.3s;
+}
+
+.page-nav-next:hover {
+	box-shadow: 2px 2px 16px 0 rgba(0, 0, 0, 0.5);
+}
+
+
+.page-nav-prev {
+	font-size: 24px;
+	cursor: pointer;
+	margin-left: 12px;
+	padding: 8px;
+	background-color: #6cccfe;
+	transition: box-shadow 0.3s;
+}
+
+.current-page {
+	color: white;
+	font-size: 32px;
+	margin-top: -4px;
+}
+
+.current-page:before {
+	content: 'Page: '
+}
+
+.page-nav-prev:hover {
+	box-shadow: 2px 2px 16px 0 rgba(0, 0, 0, 0.5);
+}

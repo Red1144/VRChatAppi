@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<link rel="stylesheet" href="./css/login.css">
+</head>
+<body>
+<div class="login-page">
+	<div class="form">
+		<div class="login-label">
+			<label>VRChat login</label>
+		</div>
+		<form class="login-form">
+			<input id="username" type="text" placeholder="username"/>
+			<input id="password" type="password" placeholder="password"/>
+		</form>
+		<button id="login-btn">login</button>
+	</div>
+	<div class="disclaimer">
+		<a>
+			Your login credentials and authorization tokens will only be sent to a
+			<div class="domains tooltip">trusted
+				VRChat domain
+				<span class="tooltiptext">api.vrchat.cloud</span>
+			</div>
+			and encrypted
+			locally to your machine.
+		</a>
+	</div>
+</div>
+<div id="loading" class="loading-container" style="opacity: 0">
+	<div class="loading">
+		<img src="css/loading.gif" style="width:24px; padding-left:6px;">
+		<a>Loading...</a>
+	</div>
+</div>
+<script>
+	require('./js/login.js');
+</script>
+</body>
+</html>
