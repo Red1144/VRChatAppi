@@ -35,3 +35,5 @@ See who you have blocked or muted on the left and on the right who has you block
 # Disclaimer
 - While it is very unlikely to have your account banned from using this I am not liable for any damage that happens to your account from using this app. It was made for testing out what you can do with the API.
 - VRChat has some kind of API rate limit but you are unlikely to encounter it in normal usage so don't spam the programs features or it might break.
+- VRChat's only stance on using their API is "Don't be malicious" ![asd](https://i.imgur.com/SAGcwo1.png "Player moderations")<br>
+ Source: VRChat official Discord #announcements channel
