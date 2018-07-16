@@ -1,6 +1,6 @@
 # VRChat Appi
 
-Appi is an experimental desktop application that fetches data from the VRChat API an
+Appi is an experimental desktop application that fetches data from the VRChat API
   - See who's online without launching the game
   - View who you have blocked or muted or who has blocked or muted you
   - Download your own avatars as a unitypackage
