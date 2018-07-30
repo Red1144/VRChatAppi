@@ -227,6 +227,19 @@ function getAvatars(amount, offset, callback) {
 }
 
 /**
+ * List own worlds
+ * @param amount        How many worlds to get
+ * @param callback      Callback function
+ */
+function getWorlds(amount, callback) {
+	const url = formatURL("/worlds") + "&user=me&releaseStatus=all&n=" + amount + "&sort=updated&order=descending";
+	sendGETRequest(url, (data) => {
+		console.log("Worlds!!!");
+		callback(data);
+	})
+}
+
+/**
  * Get avatar by ID
  * @param id            The ID of the avatar
  * @param callback      Callback function
@@ -237,6 +250,19 @@ function getAvatar(id, callback) {
 		callback(data);
 	})
 }
+
+/**
+ * Get get world by ID
+ * @param id            The ID of the world
+ * @param callback      Callback function
+ */
+function getOwnWorld(id, callback) {
+	sendGETRequest(formatURL("/worlds/" + id), (data) => {
+		console.log("1 world");
+		callback(data);
+	})
+}
+
 
 /**
  * Get world by ID
@@ -471,6 +497,13 @@ module.exports = {
 
 	getAvatar: (id, callback) => {
 		getAvatar(id, callback)
+	},
+
+	getWorlds: (amount, callback) => {
+		getWorlds(amount, callback)
+	},
+	getOwnWorld: (id, callback) => {
+		getOwnWorld(id, callback)
 	},
 
 	logout: (callback) => {

@@ -37,6 +37,11 @@ navAvatars.addEventListener("click", () => {
 	buildAvatarsPage(content, 0);
 	closeNav();
 });
+const navWorlds = document.getElementById("worlds");
+navWorlds.addEventListener("click", () => {
+	buildWorldsPage(content);
+	closeNav();
+});
 const navModeration = document.getElementById("moderation");
 navModeration.addEventListener("click", () => {
 	buildModerationsPage(content);
@@ -178,6 +183,62 @@ function buildAvatarsPage(content, offset) {
 		container.appendChild(pageNav);
 		content.appendChild(container);
 		loadingAvatars = false;
+		stopLoading();
+	})
+}
+
+/**
+ * Build the worlds page
+ * @param content   The content to build on
+ */
+// TODO cleanup
+function buildWorldsPage(content) {
+	startLoading();
+	api.getWorlds(20, (data) => {
+		content.innerHTML = '';
+		const container = createElement("div", "avatars-container");
+		for (let i = 0; i < data.length; i++) {
+			const world = data[i];
+
+			const avatarEntry = createElement("div", "avatar-entry");
+
+			const avatarNameContainer = createElement("div", "avatar-name-container");
+			const avatarName = createElement("a", "avatar-name", world.name);
+			avatarNameContainer.appendChild(avatarName);
+
+			const avatarImage = createElement("img", "avatar-image");
+			avatarImage.setAttribute("src", world.thumbnailImageUrl);
+			const avatarReleaseStatusContainer = createElement("div", "avatar-status-container");
+			const avatarReleaseStatus = createElement("a", "avatar-release-status", world.releaseStatus);
+			avatarReleaseStatusContainer.appendChild(avatarReleaseStatus);
+
+			avatarEntry.appendChild(avatarNameContainer);
+			avatarEntry.appendChild(avatarImage);
+			avatarEntry.appendChild(avatarReleaseStatusContainer);
+
+			const dlContainer = createElement("div", "dl-container");
+			const dlButton = createElement("div", "dl-button");
+			const dlText = createElement("a", "dl-text", ".unitypackage");
+			const dlLogo = createElement("img", "dl-logo");
+			dlLogo.setAttribute("src", "./css/flaticon/png/UnityLogo.png");
+			dlButton.appendChild(dlLogo);
+			dlButton.appendChild(dlText);
+			dlContainer.appendChild(dlButton);
+			avatarEntry.appendChild(dlContainer);
+			container.appendChild(avatarEntry);
+			dlButton.addEventListener("click", () => {
+				startLoading();
+				api.getOwnWorld(world.id, (data) => {
+					if (data.unityPackageUrl === "") {
+						stopLoading();
+						return
+					}
+					main.download(data.unityPackageUrl);
+					stopLoading();
+				})
+			})
+		}
+		content.appendChild(container);
 		stopLoading();
 	})
 }
