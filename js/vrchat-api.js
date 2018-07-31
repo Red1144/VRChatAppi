@@ -39,6 +39,11 @@ let loginInfo = {};
 let worldCache = [];
 
 /**
+ * Enable auth token reinitialization - Used for debugging without creating too many HTTP requests
+ */
+const enableTokenReint = true;
+
+/**
  * Saves the session information to a file for later use
  * @param {function} callback   Callback function
  */
@@ -79,15 +84,25 @@ function loadSession(callback) {
 				let dec = decipher.update(encrypted, 'hex', 'utf8');
 				dec += decipher.final('utf8');
 				const i = JSON.parse(dec);
-				authToken = i.authToken;
-				clientToken = i.clientToken;
-				loginInfo = {
-					username: i.loginInfo.username,
-					displayName: i.loginInfo.displayName,
-					avatarImage: i.loginInfo.avatarImage,
-					id: i.loginInfo.id
-				};
-				callback(hasKey);
+				if (!enableTokenReint) {
+					// if we're allowed to use cached login tokens
+					authToken = i.authToken;
+					clientToken = i.clientToken;
+					loginInfo = {
+						username: i.loginInfo.username,
+						displayName: i.loginInfo.displayName,
+						avatarImage: i.loginInfo.avatarImage,
+						id: i.loginInfo.id
+					};
+					callback(hasKey);
+				} else {
+					// if not
+					setClientToken(() => {
+						login(i.loginInfo.loginName, i.loginInfo.loginPassword, () => {
+							callback(hasKey);
+						})
+					});
+				}
 			});
 		} else {
 			callback(false);
@@ -133,7 +148,6 @@ function loadWorlds() {
 function setClientToken(callback) {
 	sendGETRequest("/config", (data) => {
 		clientToken = data.apiKey;
-		console.log("Client token set: " + clientToken);
 		callback();
 	});
 }
@@ -170,7 +184,6 @@ function login(name, password, callback) {
 		return
 	}
 	sendGETRequest(formatURL("/auth/user"), (data, headers) => {
-		// console.log(JSON.stringify(data));
 		if (data.error) {
 			callback(data.error.message);
 		} else {
@@ -179,7 +192,9 @@ function login(name, password, callback) {
 				username: data.username,
 				displayName: data.displayName,
 				avatarImage: data.currentAvatarThumbnailImageUrl,
-				id: data.id
+				id: data.id,
+				loginPassword: password,
+				loginName: name
 			};
 			saveSession(() => {
 				callback(data);
@@ -193,7 +208,6 @@ function login(name, password, callback) {
  * @param {function} callback  The callback function
  */
 function getFriends(callback) {
-	console.log("Requesting friends from the API");
 	if (!isClientToken()) {
 		console.log("Error! client token not set => {@see getFriends}");
 		// TODO error handling
@@ -207,7 +221,6 @@ function getFriends(callback) {
 	}
 
 	sendGETRequest(formatURL("/auth/user/friends"), (data) => {
-		console.log(JSON.stringify(data));
 		callback(data);
 	});
 }
@@ -221,7 +234,6 @@ function getFriends(callback) {
 function getAvatars(amount, offset, callback) {
 	const url = formatURL("/avatars") + "&user=me&releaseStatus=all&n=" + amount + "&offset=" + offset + "&sort=updated&order=descending";
 	sendGETRequest(url, (data) => {
-		console.log("Avatars!!!");
 		callback(data);
 	})
 }
@@ -234,7 +246,6 @@ function getAvatars(amount, offset, callback) {
 function getWorlds(amount, callback) {
 	const url = formatURL("/worlds") + "&user=me&releaseStatus=all&n=" + amount + "&sort=updated&order=descending";
 	sendGETRequest(url, (data) => {
-		console.log("Worlds!!!");
 		callback(data);
 	})
 }
@@ -246,19 +257,17 @@ function getWorlds(amount, callback) {
  */
 function getAvatar(id, callback) {
 	sendGETRequest(formatURL("/avatars/" + id), (data) => {
-		console.log("1 Avatar");
 		callback(data);
 	})
 }
 
 /**
- * Get get world by ID
+ * Get own world by ID
  * @param id            The ID of the world
  * @param callback      Callback function
  */
 function getOwnWorld(id, callback) {
 	sendGETRequest(formatURL("/worlds/" + id), (data) => {
-		console.log("1 world");
 		callback(data);
 	})
 }
@@ -273,7 +282,6 @@ function getWorld(id, callback) {
 	for (let i = 0; i < worldCache.length; i++) {
 		if (worldCache[i].id === id) {
 			callback(worldCache[i]);
-			// console.log("Found cached");
 			return;
 		}
 	}
@@ -291,8 +299,6 @@ function getWorld(id, callback) {
 	}
 
 	sendGETRequest(formatURL("/worlds/" + id), (data) => {
-		// console.log("DONG DONG DONG!!!");
-		// console.log(JSON.stringify(data));
 		const world = {
 			id: data.id,
 			name: data.name,
@@ -313,7 +319,6 @@ function getWorld(id, callback) {
 		if (found === false) {
 			worldCache.push(world);
 		}
-		console.log("Requesting a world from the API");
 		saveWorlds();
 		callback(world);
 	});
@@ -327,7 +332,6 @@ function getWorld(id, callback) {
  */
 function getWorldMetadata(id, instance, callback) {
 	sendGETRequest(formatURL("/worlds/" + id + "/" + instance), (data) => {
-		console.log("Requesting world instance data from the API");
 		callback(data);
 	});
 }
@@ -338,8 +342,6 @@ function getWorldMetadata(id, instance, callback) {
  */
 function modGetMine(callback) {
 	sendGETRequest(formatURL("/auth/user/playermoderations"), (data) => {
-		console.log("My moderations");
-		console.log(JSON.stringify(data));
 		callback(data);
 	});
 }
@@ -350,8 +352,6 @@ function modGetMine(callback) {
  */
 function modGetAgainstMe(callback) {
 	sendGETRequest(formatURL("/auth/user/playermoderated"), (data) => {
-		console.log("Moderations against me");
-		console.log(JSON.stringify(data));
 		callback(data);
 	});
 }

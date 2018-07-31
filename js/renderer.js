@@ -63,6 +63,28 @@ function logout() {
 	});
 }
 
+
+/**
+ * Notifaction function
+ * @param message {string}      message to send in the notification
+ * @param type {string}         notification type, alert-ok or alert-error
+ */
+function sendNotification(message, type) {
+	const area = document.getElementById("notification-area");
+	const notification = createElement("div", "notification " + type);
+	const msg = createElement("a", "", message);
+	notification.appendChild(msg);
+	area.appendChild(notification);
+	notification.addEventListener("click", () => {
+		area.removeChild(notification);
+	});
+	setTimeout(() => {
+		if (area.contains(notification)) {
+			area.removeChild(notification);
+		}
+	}, 5000);
+}
+
 /**
  * Loading status popup functions
  */
@@ -145,11 +167,14 @@ function buildAvatarsPage(content, offset) {
 			dlButton.addEventListener("click", () => {
 				startLoading();
 				api.getAvatar(avatar.id, (data) => {
+					console.log(JSON.stringify(data));
 					if (data.unityPackageUrl === "") {
+						sendNotification("This avatar cannot be downloaded for unknown reasons.", "alert-error");
 						stopLoading();
 						return
 					}
 					main.download(data.unityPackageUrl);
+					sendNotification("Started download.", "alert-ok");
 					stopLoading();
 				})
 			})
@@ -230,10 +255,12 @@ function buildWorldsPage(content) {
 				startLoading();
 				api.getOwnWorld(world.id, (data) => {
 					if (data.unityPackageUrl === "") {
+						sendNotification("This world cannot be downloaded for unknown reasons.", "alert-error");
 						stopLoading();
 						return
 					}
 					main.download(data.unityPackageUrl);
+					sendNotification("Started download.", "alert-ok");
 					stopLoading();
 				})
 			})
@@ -263,6 +290,9 @@ function buildMePage(content) {
 	const pic = createElement("img", "profile-picture-img");
 	pic.setAttribute("src", loginInfo.avatarImage);
 	picture.appendChild(pic);
+	picture.addEventListener('click', () => {
+		sendNotification("This is not an easter egg", "alert-ok");
+	});
 
 	const wTextCont = createElement("div", "welcome-text-container");
 	wTextCont.appendChild(createElement("a", "welcome-text", "Welcome"));
@@ -306,7 +336,10 @@ function buildFriendsPage(content) {
 			const world = friend.location;
 			if (world === "private") {
 				friendWorldName.innerText = "Private world";
-				friendWorldName.setAttribute("class", "friend-world-nothing")
+				friendWorldName.setAttribute("class", "friend-world-nothing");
+				friendWorldName.addEventListener('click', () => {
+					sendNotification("Private worlds cannot be viewed due to API limitations.", "alert-error");
+				});
 			} else {
 				const regex = /(.+?):(.+?)($|~(.+?)\((.+?)\))/g;
 				const groups = regex.exec(world);
@@ -358,7 +391,10 @@ function buildFriendsPage(content) {
 					});
 				} else {
 					clearMode = "Public";
-					friendWorldName.setAttribute("class", "friend-world-nothing")
+					friendWorldName.setAttribute("class", "friend-world-nothing");
+					friendWorldName.addEventListener('click', () => {
+						sendNotification("Public worlds cannot be viewed due to API limitations", "alert-error");
+					});
 				}
 				friendWorldMode.innerText = clearMode;
 				friendWorldInstance.innerText = instance;

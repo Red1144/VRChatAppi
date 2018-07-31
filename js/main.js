@@ -24,7 +24,7 @@ function createWindow() {
 		// when you should delete the corresponding element.
 		mainWindow = null
 	});
-	//mainWindow.loadFile('login.html');
+	// mainWindow.loadFile('login.html');
 	api.loadWorlds();
 	api.loadSession((success) => {
 		if (success === false) {

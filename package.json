@@ -1,5 +1,5 @@
 {
-  "name": "VRChatApp",
+  "name": "vrchatappi",
   "version": "1.0.0",
   "description": "Example VRChat companion app using the API",
   "main": "./js/main.js",
@@ -7,13 +7,8 @@
     "start": "electron ."
   },
   "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
   ],
-  "license": "CC0-1.0",
+  "license": "WTFNMFPL-1.0",
   "devDependencies": {
     "electron": "^2.0.0"
   },
