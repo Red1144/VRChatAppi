@@ -31,7 +31,7 @@ See who you have blocked or muted on the left and on the right who has you block
 
 # Known bugs
 - Your authorization token will eventually expire and will not automatically reset and every tab will be empty, manually log out and log back in to fix this.
-- Some avatars that are uploaded to your account cannot be downloaded and will do nothing when you press the download button, cause for this is not something I can't fix and you'll just have to settle with proper error handling.
+- Some avatars that are uploaded to your account cannot be downloaded and will do nothing when you press the download button, cause for this is not something I can fix and you'll just have to settle with proper error handling.
 
 # Disclaimer
 - While it is very unlikely to have your account banned from using this I am not liable for any damage that happens to your account from using this app. It was made for testing out what you can do with the API.
