@@ -47,11 +47,17 @@ navModeration.addEventListener("click", () => {
 	buildModerationsPage(content);
 	closeNav();
 });
+const navSettings = document.getElementById("settings");
+navSettings.addEventListener("click", () => {
+	buildSettingsPage(content);
+	closeNav();
+});
 const navLogout = document.getElementById("logout");
 navLogout.addEventListener("click", () => {
 	logout();
 	closeNav();
 });
+
 
 /**
  * Logs you out of the app
@@ -122,7 +128,65 @@ popupContainer.addEventListener("click", () => {
 	closePopup();
 });
 
-buildMePage(content);
+buildSettingsPage(content);
+
+function buildSettingsPage (content) {
+	content.innerHTML = '';
+	const settingsArea = createElement("div", "settings-container");
+
+	const allowPostContainer = createElement("label", "setting-container", "Allow the program to manage and modify data on your VRChat account. Some features are unavailable when this is setting is disabled.");
+	const allowPostCheckbox = createElement("input");
+	allowPostCheckbox.setAttribute("type", "checkbox");
+	const allowPostCheckmark = createElement("span", "checkmark");
+	allowPostContainer.appendChild(allowPostCheckbox);
+	allowPostContainer.appendChild(allowPostCheckmark);
+	settingsArea.appendChild(allowPostContainer);
+
+	const avatarToShowContainer = createElement("label", "setting-container-number", "How many avatars to list at once. 1-100");
+	const avatarToShowInput = createElement("input");
+	avatarToShowInput.setAttribute("type", "number");
+	avatarToShowInput.setAttribute("value", "10");
+	avatarToShowContainer.appendChild(avatarToShowInput);
+	settingsArea.appendChild(avatarToShowContainer);
+
+	const worldToShowContainer = createElement("label", "setting-container-number", "How many worlds to list. 1-100");
+	const worldToShowInput = createElement("input");
+	worldToShowInput.setAttribute("type", "number");
+	worldToShowInput.setAttribute("value", "20");
+	worldToShowContainer.appendChild(worldToShowInput);
+	settingsArea.appendChild(worldToShowContainer);
+
+	const notifTimeoutContainer = createElement("label", "setting-container-number", "Notification timeout in seconds");
+	const notifTimeoutInput = createElement("input");
+	notifTimeoutInput.setAttribute("type", "number");
+	notifTimeoutInput.setAttribute("value", "5");
+	notifTimeoutContainer.appendChild(notifTimeoutInput);
+	settingsArea.appendChild(notifTimeoutContainer);
+
+	const sortMethodContainer = createElement("label", "setting-container-select", "List sort mode");
+	const sortMethodSelect = createElement("select", "select-dropdown");
+	sortMethodSelect.setAttribute("value", "updated");
+	const updated = createElement("option", "select-option", "Updated");
+	updated.setAttribute("value", "updated");
+	const created = createElement("option", "select-option", "Created");
+	updated.setAttribute("value", "created");
+	const nothing = createElement("option", "select-option", "Nothing");
+	updated.setAttribute("value", "order");
+	sortMethodSelect.appendChild(updated);
+	sortMethodSelect.appendChild(created);
+	sortMethodSelect.appendChild(nothing);
+	sortMethodContainer.appendChild(sortMethodSelect);
+	settingsArea.appendChild(sortMethodContainer);
+
+
+
+	const clearWorldCacheContainer = createElement("div", "clear-cache-container");
+	const clearWorldCacheButton = createElement("div", "clear-cache-button", "Clear cache");
+	clearWorldCacheContainer.appendChild(clearWorldCacheButton);
+	settingsArea.appendChild(clearWorldCacheContainer);
+
+	content.appendChild(settingsArea)
+}
 
 /**
  * Build the avatars page

@@ -41,7 +41,7 @@ let worldCache = [];
 /**
  * Enable auth token reinitialization - Used for debugging without creating too many HTTP requests
  */
-const enableTokenReint = true;
+const enableTokenReint = false;
 
 /**
  * Saves the session information to a file for later use
