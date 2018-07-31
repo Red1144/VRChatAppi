@@ -143,7 +143,7 @@ function loadWorlds() {
 /**
  * Get VRChat client token required to send API requests
  * @param {function} callback   Callback function
- * @return {string} VRChat client token
+ * @return {string}             VRChat client token
  */
 function setClientToken(callback) {
 	sendGETRequest("/config", (data) => {
