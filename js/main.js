@@ -25,6 +25,7 @@ function createWindow() {
 		mainWindow = null
 	});
 	// mainWindow.loadFile('login.html');
+	api.loadSettings();
 	api.loadWorlds();
 	api.loadSession((success) => {
 		if (success === false) {

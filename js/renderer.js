@@ -88,7 +88,7 @@ function sendNotification(message, type) {
 		if (area.contains(notification)) {
 			area.removeChild(notification);
 		}
-	}, 5000);
+	}, api.userSettings.notifTimeout * 1000);
 }
 
 /**
@@ -132,11 +132,21 @@ buildSettingsPage(content);
 
 function buildSettingsPage (content) {
 	content.innerHTML = '';
+	const settings = api.getUserSettings();
+	console.log(settings);
+	let isChecked = settings.allowPost;
 	const settingsArea = createElement("div", "settings-container");
 
 	const allowPostContainer = createElement("label", "setting-container", "Allow the program to manage and modify data on your VRChat account. Some features are unavailable when this is setting is disabled.");
 	const allowPostCheckbox = createElement("input");
 	allowPostCheckbox.setAttribute("type", "checkbox");
+	if (settings.allowPost) {
+		allowPostCheckbox.setAttribute("checked", "checked");
+	}
+	allowPostCheckbox.onchange = () => {
+		isChecked = !isChecked;
+		console.log(isChecked);
+	};
 	const allowPostCheckmark = createElement("span", "checkmark");
 	allowPostContainer.appendChild(allowPostCheckbox);
 	allowPostContainer.appendChild(allowPostCheckmark);
@@ -145,43 +155,79 @@ function buildSettingsPage (content) {
 	const avatarToShowContainer = createElement("label", "setting-container-number", "How many avatars to list at once. 1-100");
 	const avatarToShowInput = createElement("input");
 	avatarToShowInput.setAttribute("type", "number");
-	avatarToShowInput.setAttribute("value", "10");
+	avatarToShowInput.setAttribute("value", settings.maxAvatars);
 	avatarToShowContainer.appendChild(avatarToShowInput);
 	settingsArea.appendChild(avatarToShowContainer);
 
 	const worldToShowContainer = createElement("label", "setting-container-number", "How many worlds to list. 1-100");
 	const worldToShowInput = createElement("input");
 	worldToShowInput.setAttribute("type", "number");
-	worldToShowInput.setAttribute("value", "20");
+	worldToShowInput.setAttribute("value", settings.maxWorlds);
 	worldToShowContainer.appendChild(worldToShowInput);
 	settingsArea.appendChild(worldToShowContainer);
 
 	const notifTimeoutContainer = createElement("label", "setting-container-number", "Notification timeout in seconds");
 	const notifTimeoutInput = createElement("input");
 	notifTimeoutInput.setAttribute("type", "number");
-	notifTimeoutInput.setAttribute("value", "5");
+	notifTimeoutInput.setAttribute("value", settings.notifTimeout);
 	notifTimeoutContainer.appendChild(notifTimeoutInput);
 	settingsArea.appendChild(notifTimeoutContainer);
 
 	const sortMethodContainer = createElement("label", "setting-container-select", "List sort mode");
 	const sortMethodSelect = createElement("select", "select-dropdown");
-	sortMethodSelect.setAttribute("value", "updated");
+	sortMethodSelect.setAttribute("value", settings.sortingOrder);
+
 	const updated = createElement("option", "select-option", "Updated");
 	updated.setAttribute("value", "updated");
 	const created = createElement("option", "select-option", "Created");
-	updated.setAttribute("value", "created");
+	created.setAttribute("value", "created");
 	const nothing = createElement("option", "select-option", "Nothing");
-	updated.setAttribute("value", "order");
+	nothing.setAttribute("value", "order");
+	switch (settings.sortingOrder) {
+		case "updated":
+			updated.setAttribute("selected", "selected");
+			break;
+		case "created":
+			created.setAttribute("selected", "selected");
+			break;
+		case "order":
+			nothing.setAttribute("selected", "selected");
+			break;
+	}
 	sortMethodSelect.appendChild(updated);
 	sortMethodSelect.appendChild(created);
 	sortMethodSelect.appendChild(nothing);
 	sortMethodContainer.appendChild(sortMethodSelect);
 	settingsArea.appendChild(sortMethodContainer);
 
-
-
 	const clearWorldCacheContainer = createElement("div", "clear-cache-container");
 	const clearWorldCacheButton = createElement("div", "clear-cache-button", "Clear cache");
+	const saveSettings = createElement("div", "save-settings-button", "Save");
+	saveSettings.addEventListener("click", () => {
+		const regex = /^[1-9][0-9]?$|^100$/;
+		const maxAvatars = avatarToShowInput.value;
+		const maxWorlds = worldToShowInput.value;
+		const notifTimeout = notifTimeoutInput.value;
+		if (!regex.test(maxAvatars) || !regex.test(maxWorlds) || !regex.test(notifTimeout)) {
+			sendNotification("Some fields have invalid characters.", "alert-error");
+			return;
+		}
+		const newSettings = {
+			allowPost: isChecked,
+			maxAvatars: parseInt(maxAvatars),
+			maxWorlds: parseInt(maxWorlds),
+			notifTimeout: parseInt(notifTimeout),
+			sortingOrder: sortMethodSelect.value
+		};
+		api.userSettings = newSettings;
+		api.saveSettings(newSettings);
+		sendNotification("Settings saved.", "alert-ok");
+	});
+	clearWorldCacheButton.addEventListener("click", () => {
+		api.clearCache();
+		sendNotification("World cache cleared successfully.", "alert-ok")
+	});
+	clearWorldCacheContainer.appendChild(saveSettings);
 	clearWorldCacheContainer.appendChild(clearWorldCacheButton);
 	settingsArea.appendChild(clearWorldCacheContainer);
 
@@ -196,7 +242,7 @@ function buildSettingsPage (content) {
 function buildAvatarsPage(content, offset) {
 	loadingAvatars = true;
 	startLoading();
-	api.getAvatars(10, offset, (data) => {
+	api.getAvatars(api.getUserSettings().maxAvatars, offset, api.getUserSettings().sortingOrder, (data) => {
 		content.innerHTML = '';
 		const container = createElement("div", "avatars-container");
 		for (let i = 0; i < data.length; i++) {
@@ -231,7 +277,6 @@ function buildAvatarsPage(content, offset) {
 			dlButton.addEventListener("click", () => {
 				startLoading();
 				api.getAvatar(avatar.id, (data) => {
-					console.log(JSON.stringify(data));
 					if (data.unityPackageUrl === "") {
 						sendNotification("This avatar cannot be downloaded for unknown reasons.", "alert-error");
 						stopLoading();
@@ -256,7 +301,7 @@ function buildAvatarsPage(content, offset) {
 				return
 			}
 			avatarPage--;
-			buildAvatarsPage(content, avatarPage * 10)
+			buildAvatarsPage(content, avatarPage * api.userSettings.maxAvatars)
 		});
 		const next = createElement("div", "page-nav-next", "Next");
 		next.addEventListener("click", () => {
@@ -264,7 +309,7 @@ function buildAvatarsPage(content, offset) {
 				return;
 			}
 			avatarPage++;
-			buildAvatarsPage(content, avatarPage * 10);
+			buildAvatarsPage(content, avatarPage * api.userSettings.maxAvatars);
 		});
 		pageNav.appendChild(prev);
 		pageNav.appendChild(pageContainer);
@@ -283,7 +328,7 @@ function buildAvatarsPage(content, offset) {
 // TODO cleanup
 function buildWorldsPage(content) {
 	startLoading();
-	api.getWorlds(20, (data) => {
+	api.getWorlds(api.getUserSettings().maxWorlds, api.getUserSettings().sortingOrder, (data) => {
 		content.innerHTML = '';
 		const container = createElement("div", "avatars-container");
 		for (let i = 0; i < data.length; i++) {
@@ -407,7 +452,6 @@ function buildFriendsPage(content) {
 			} else {
 				const regex = /(.+?):(.+?)($|~(.+?)\((.+?)\))/g;
 				const groups = regex.exec(world);
-				console.log(world);
 				const id = groups[1];
 				const instance = groups[2];
 				const mode = groups[4];
@@ -430,7 +474,6 @@ function buildFriendsPage(content) {
 						api.getWorldMetadata(gs[1], gs[2], (data) => {
 							const listUsers = [];
 							if (data === false) {
-								console.log(false);
 								stopLoading();
 								return;
 							}

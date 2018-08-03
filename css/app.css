@@ -594,6 +594,7 @@ html, body {
 	max-width: 512px;
 	background-color: white;
 	padding: 16px;
+	box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.75);
 }
 
 /* The container */
@@ -717,7 +718,7 @@ input[type=number]::-webkit-inner-spin-button {
 
 .clear-cache-container {
 	display: flex;
-	justify-content: center;
+	justify-content: space-between;
 	margin: 32px auto 8px;
 }
 
@@ -735,5 +736,22 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 .clear-cache-button:hover {
+	box-shadow: 2px 2px 16px 0 rgba(0, 0, 0, 0.5);
+}
+
+.save-settings-button {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	font-size: 24px;
+	cursor: pointer;
+	margin-right: 12px;
+	padding: 8px;
+	background-color: #00ff00;
+	transition: box-shadow 0.3s;
+}
+
+.save-settings-button:hover {
 	box-shadow: 2px 2px 16px 0 rgba(0, 0, 0, 0.5);
 }

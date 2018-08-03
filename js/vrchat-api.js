@@ -39,15 +39,38 @@ let loginInfo = {};
 let worldCache = [];
 
 /**
- * Enable auth token reinitialization - Used for debugging without creating too many HTTP requests
+ * User specified settings
+ * @type {{allowPost: boolean, maxAvatars: number, maxWorlds: number, notifTimeout: number, sortingOrder: string}}
+ */
+let userSettings = {
+	allowPost: false,
+	maxAvatars: 10,
+	maxWorlds: 20,
+	notifTimeout: 5,
+	sortingOrder: "updated"
+};
+
+/**
+ * Enable auth token reinitialization - Used for debugging without creating too many HTTP requests,
+ * if this is set to false in production I fucked up.
+ * @type {boolean}
  */
 const enableTokenReint = false;
+
+/**
+ * Clears the world cache
+ */
+function clearCache() {
+	worldCache = [];
+	saveWorlds();
+}
 
 /**
  * Saves the session information to a file for later use
  * @param {function} callback   Callback function
  */
 function saveSession(callback) {
+	console.log("true");
 	const data = JSON.stringify({
 		authToken: authToken,
 		clientToken: clientToken,
@@ -57,13 +80,42 @@ function saveSession(callback) {
 	let crypted = cipher.update(data, 'utf8', 'hex');
 	crypted += cipher.final('hex');
 	storage.set("session", {
-		encrypted: Buffer.from(crypted).toString('base64')
+		encrypted: Buffer.from(crypted).toString('base64'),
 	}, (error) => {
 		if (error) {
 			console.log("Error: " + error);
 			return;
 		}
 		callback();
+	});
+}
+
+/**
+ * Saves user settings to a file
+ * @param newSettings {object}      New settings to save
+ */
+function saveSettings(newSettings) {
+	storage.set("settings", {
+		settings: newSettings
+	}, (error) => {
+		if (error) {
+			console.log("Error: " + error);
+		}
+	});
+	userSettings = newSettings;
+}
+
+/**
+ * Load user settings from a file
+ */
+function loadSettings() {
+	storage.has("settings", (error, hasKey) => {
+		if (hasKey) {
+			storage.get("settings", (error, data) => {
+				userSettings = data.settings
+				console.log(data.settings)
+			});
+		}
 	});
 }
 
@@ -159,7 +211,7 @@ function setClientToken(callback) {
 function logout(callback) {
 	storage.has("session", (error, hasKey) => {
 		if (hasKey) {
-			storage.remove("session", (error, data) => {
+			storage.remove("session", () => {
 				authToken = '';
 				clientToken = '';
 				loginInfo = {};
@@ -229,10 +281,11 @@ function getFriends(callback) {
  * List own avatars
  * @param amount        How many avatars to get
  * @param offset        Offset
+ * @param order         Sorting order
  * @param callback      Callback function
  */
-function getAvatars(amount, offset, callback) {
-	const url = formatURL("/avatars") + "&user=me&releaseStatus=all&n=" + amount + "&offset=" + offset + "&sort=updated&order=descending";
+function getAvatars(amount, offset, order, callback) {
+	const url = formatURL("/avatars") + "&user=me&releaseStatus=all&n=" + amount + "&offset=" + offset + "&sort=" + order + "&order=descending";
 	sendGETRequest(url, (data) => {
 		callback(data);
 	})
@@ -241,10 +294,11 @@ function getAvatars(amount, offset, callback) {
 /**
  * List own worlds
  * @param amount        How many worlds to get
+ * @param order         Sorting order
  * @param callback      Callback function
  */
-function getWorlds(amount, callback) {
-	const url = formatURL("/worlds") + "&user=me&releaseStatus=all&n=" + amount + "&sort=updated&order=descending";
+function getWorlds(amount, order, callback) {
+	const url = formatURL("/worlds") + "&user=me&releaseStatus=all&n=" + amount + "&sort=" + order + "&order=descending";
 	sendGETRequest(url, (data) => {
 		callback(data);
 	})
@@ -491,16 +545,16 @@ module.exports = {
 		modGetMine(callback)
 	},
 
-	getAvatars: (amount, offset, callback) => {
-		getAvatars(amount, offset, callback)
+	getAvatars: (amount, offset, order, callback) => {
+		getAvatars(amount, offset, order, callback)
 	},
 
 	getAvatar: (id, callback) => {
 		getAvatar(id, callback)
 	},
 
-	getWorlds: (amount, callback) => {
-		getWorlds(amount, callback)
+	getWorlds: (amount, order, callback) => {
+		getWorlds(amount, order, callback)
 	},
 	getOwnWorld: (id, callback) => {
 		getOwnWorld(id, callback)
@@ -508,5 +562,21 @@ module.exports = {
 
 	logout: (callback) => {
 		logout(callback);
+	},
+
+	clearCache: () => {
+		clearCache();
+	},
+
+	loadSettings: () => (
+		loadSettings()
+	),
+
+	saveSettings: (newSettings) => {
+		saveSettings(newSettings)
+	},
+
+	getUserSettings: () => {
+		return userSettings
 	}
 };
