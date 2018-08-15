@@ -229,7 +229,7 @@ html, body {
 .friend-image {
 	box-shadow: 2px 2px 16px 0 rgba(0, 0, 0, 0.5);
 	padding: 4px;
-	width: 256px;
+	width: 247px;
 }
 
 .friend-world-container {
@@ -243,6 +243,20 @@ html, body {
 	font-size: 24px;
 	cursor: pointer;
 	transition: color 0.3s;
+}
+
+.world-load {
+	padding-top: 4px;
+	padding-bottom: 4px;
+	background-color: #6cccfe;
+	user-select: none;
+	font-size: 24px;
+	cursor: pointer;
+	transition: box-shadow 0.2s;
+}
+
+.world-load:hover {
+	box-shadow: 2px 2px 16px 0 rgba(0, 0, 0, 0.5);
 }
 
 .friend-world-nothing {
@@ -535,6 +549,7 @@ html, body {
 	position: fixed;
 	right: 0;
 	bottom: 0;
+	z-index: 30;
 }
 
 .notification-area {

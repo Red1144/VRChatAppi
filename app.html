@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<title>VRApp</title>
 	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
-	<link rel="stylesheet" href="./css/app.css">
+	<link id="css-theme" rel="stylesheet" href="./css/app.css">
 </head>
 <body>
 <div id="mySidenav" class="sidenav">
@@ -45,7 +45,7 @@
 	<div id="notification-area" class="notification-area">
 	</div>
 </div>
-
+<script src="./js/ratelimiter.js"></script>
 <script>
 	require('./js/renderer.js');
 </script>
@@ -53,10 +53,12 @@
 <script>
 	function openNav() {
 		document.getElementById("mySidenav").style.width = "250px";
+		document.getElementById("mySidenav").style.left = "0";
 	}
 
 	function closeNav() {
 		document.getElementById("mySidenav").style.width = "0";
+		document.getElementById("mySidenav").style.left = "-50px";
 	}
 </script>
 </body>

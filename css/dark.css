@@ -1,0 +1,425 @@
+body {
+}
+
+html, body {
+}
+
+.sidenav {
+	background-color: #2B2B2B;
+	border: 1px solid black;
+	left: -50px;
+}
+
+.sidenav .entry {
+}
+
+.sidenav a:hover {
+	color: #A9B7C6;
+}
+
+.sidenav .closebtn {
+}
+
+@media screen and (max-height: 450px) {
+
+}
+
+.entry .menu-icon {
+}
+
+.entry:hover .menu-icon {
+}
+
+.top-bar {
+	background-color: #2B2B2B;
+	border-bottom: 1px solid black;
+	box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+}
+
+.menu-btn {
+	color: #A9B7C6;
+}
+
+.menu-btn:hover {
+	color: #CB772F;
+}
+
+.loading-container {
+}
+
+.loading {
+}
+
+.popup-container {
+}
+
+.popup {
+	background-color: #2B2B2B;
+	border: 1px solid black;
+	box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+}
+
+.popup-info-container {
+	color: #CB772F;
+}
+
+.user-list-container {
+	box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+	border: 1px solid black;
+	color: #A9B7C6;
+	background-color: transparent;
+}
+
+.user-list-entry {
+}
+
+.user-list-container a:nth-child(even) {
+	background-color: #2B2B2B;
+}
+
+.user-list-container a:nth-child(odd) {
+	background-color: #323232;
+}
+
+/* Me page start */
+
+.center {
+}
+
+.center-child {
+	box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+}
+
+.profile-picture-img {
+	box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+}
+
+.welcome {
+	background-color: #2B2B2B;
+	border: 1px solid black;
+}
+
+.welcome-text-container {
+	color: #A9B7C6;
+}
+
+.welcome-text {
+}
+
+.profile-picture {
+	border: 1px solid black;
+}
+
+.names {
+}
+
+.names a {
+}
+
+.display-name {
+	color: #A9B7C6;
+}
+
+.user-name {
+	color: #808080;
+}
+
+/* Friends page start */
+
+.friends-container {
+}
+
+.friend-entry {
+	background-color: #2B2B2B;
+	border: 1px solid black;
+	box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+}
+
+.friend-image {
+	box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+}
+
+.friend-world-container {
+	color: #A9B7C6;
+}
+
+.friend-world {
+}
+
+.world-load {
+	background-color: #214283;
+	border: 1px solid black;
+}
+
+.world-load:hover {
+	box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+}
+
+.friend-world-nothing {
+}
+
+.friend-world-nothing:active {
+}
+
+.friend-world:hover {
+	color: #6cccfe;
+}
+
+.friend-world-instance {
+}
+
+.friend-world-instance:before {
+}
+
+.friend-world-mode {
+	color: #808080;
+}
+
+.friend-world-container a {
+}
+
+.friend-name-container {
+	color: #CB772F;
+}
+
+.friend-image {
+	padding: 8px;
+	width: 241px;
+	border: 1px solid black;
+}
+
+.friend-world-nothing:active {
+	color: #D25252;
+}
+
+/* Moderation start */
+
+.header-container {
+}
+
+.mine-header-container {
+}
+
+.against-header-container {
+}
+
+.moderation-container {
+}
+
+.card-container {
+}
+
+.moderation-mine-container {
+}
+
+.moderation-against-container {
+}
+
+.icon-container {
+}
+
+.against-list {
+}
+
+.mine-list {
+}
+
+.icons-container {
+}
+
+.user-entry-container {
+}
+
+.user-entry {
+}
+
+.user-entry-name {
+}
+
+.against-list .user-entry:nth-child(even) {
+}
+
+.against-list .user-entry:nth-child(odd) {
+}
+
+.mine-list .user-entry:nth-child(even) {
+}
+
+.mine-list .user-entry:nth-child(odd) {
+}
+
+.mute-icon {
+}
+
+.block-icon {
+}
+
+/* Avatars start */
+
+.avatar-entry {
+	background-color: #2B2B2B;
+	border: 1px solid black;
+	box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+}
+
+.avatar-image {
+	box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+	padding: 8px;
+	border: 1px solid black;
+}
+
+.avatar-status-container {
+	color: #808080;
+}
+
+.avatar-name {
+	color: #CB772F;
+}
+
+.dl-button {
+	cursor: pointer;
+	padding: 8px;
+	border: 1px solid black;
+	background-color: #214283;
+	color: #A9B7C6;
+}
+
+.dl-button:hover {
+	box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+}
+
+.page-nav-container {
+	box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+	background-color: #2B2B2B;
+	border-top: 1px solid black;
+	color: #A9B7C6;
+}
+
+.page-nav-next {
+	background-color: #214283;
+	border: 1px solid black;
+}
+
+.page-nav-next:hover {
+	box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+}
+
+.page-nav-prev {
+	background-color: #214283;
+	border: 1px solid black;
+}
+
+.current-page {
+	color: #A9B7C6;
+}
+
+.page-nav-prev:hover {
+	box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+}
+
+/* ===Notification area=== */
+
+.notification-container {
+}
+
+.notification-area {
+}
+
+.notification {
+}
+
+.alert-error {
+}
+
+.alert-ok {
+}
+
+.notification:hover {
+}
+
+.notification a {
+}
+
+@keyframes slide-up {
+}
+
+/* ===Settings=== */
+
+.settings-container {
+	box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+	background-color: #2B2B2B;
+	border: 1px solid black;
+}
+
+/* The container */
+.setting-container {
+	color: #A9B7C6;
+}
+
+/* Hide the browser's default checkbox */
+.setting-container input {
+}
+
+/* Create a custom checkbox */
+.checkmark {
+}
+
+/* On mouse-over, add a grey background color */
+.setting-container:hover input ~ .checkmark {
+}
+
+/* When the checkbox is checked, add a blue background */
+.setting-container input:checked ~ .checkmark {
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+}
+
+/* Show the checkmark when checked */
+.setting-container input:checked ~ .checkmark:after {
+}
+
+/* Style the checkmark/indicator */
+.setting-container .checkmark:after {
+}
+
+.setting-container-number {
+	color: #A9B7C6;
+}
+
+.setting-container-number input {
+}
+
+.setting-container-select {
+	color: #A9B7C6;
+}
+
+.setting-container-select select {
+}
+
+input[type=number]::-webkit-inner-spin-button {
+}
+
+.clear-cache-container {
+}
+
+.clear-cache-button {
+	background-color: #214283;
+	color: white;
+	border: 1px solid black;
+}
+
+.clear-cache-button:hover {
+	box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+}
+
+.save-settings-button {
+	background-color: #619647;
+	color: white;
+	border: 1px solid black;
+}
+
+.save-settings-button:hover {
+	box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+}

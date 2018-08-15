@@ -13,11 +13,20 @@ const popup = document.getElementById("popup");
 let loadingAvatars = false;
 let avatarPage = 0;
 
+
+if (api.getUserSettings().useCarbon) {
+	const node = document.getElementById("css-theme");
+	const newNode = node.cloneNode();
+	newNode.setAttribute("href", "./css/dark.css");
+	document.head.appendChild(newNode);
+}
+
 /**
  * Navigation bar functions
  */
 function closeNav() {
 	document.getElementById("mySidenav").style.width = "0";
+	document.getElementById("mySidenav").style.left = "-50px";
 }
 
 const navMe = document.getElementById("me");
@@ -88,7 +97,7 @@ function sendNotification(message, type) {
 		if (area.contains(notification)) {
 			area.removeChild(notification);
 		}
-	}, api.userSettings.notifTimeout * 1000);
+	}, api.getUserSettings().notifTimeout * 1000);
 }
 
 /**
@@ -106,7 +115,6 @@ function stopLoading() {
 /**
  * Popup functions
  */
-
 function setPopup(content) {
 	//window.scrollTo(0, 0);
 	//document.body.style.overflow = "hidden";
@@ -128,16 +136,32 @@ popupContainer.addEventListener("click", () => {
 	closePopup();
 });
 
-buildSettingsPage(content);
+// first page to load
+buildMePage(content);
 
-function buildSettingsPage (content) {
+function buildSettingsPage(content) {
 	content.innerHTML = '';
 	const settings = api.getUserSettings();
 	console.log(settings);
 	let isChecked = settings.allowPost;
+	let useCarbon = settings.useCarbon;
 	const settingsArea = createElement("div", "settings-container");
 
-	const allowPostContainer = createElement("label", "setting-container", "Allow the program to manage and modify data on your VRChat account. Some features are unavailable when this is setting is disabled.");
+	const useCarbonContainer = createElement("label", "setting-container", "Use a darker and flatter theme for the program.");
+	const useCarbonCheckbox = createElement("input");
+	useCarbonCheckbox.setAttribute("type", "checkbox");
+	if (settings.useCarbon) {
+		useCarbonCheckbox.setAttribute("checked", "checked");
+	}
+	useCarbonCheckbox.onchange = () => {
+		useCarbon = !useCarbon;
+	};
+	const useCarbonCheckmark = createElement("span", "checkmark");
+	useCarbonContainer.appendChild(useCarbonCheckbox);
+	useCarbonContainer.appendChild(useCarbonCheckmark);
+	settingsArea.appendChild(useCarbonContainer);
+
+	const allowPostContainer = createElement("label", "setting-container", "[Reserved for future updates] Allow the program to manage and modify data on your VRChat account.");
 	const allowPostCheckbox = createElement("input");
 	allowPostCheckbox.setAttribute("type", "checkbox");
 	if (settings.allowPost) {
@@ -152,14 +176,14 @@ function buildSettingsPage (content) {
 	allowPostContainer.appendChild(allowPostCheckmark);
 	settingsArea.appendChild(allowPostContainer);
 
-	const avatarToShowContainer = createElement("label", "setting-container-number", "How many avatars to list at once. 1-100");
+	const avatarToShowContainer = createElement("label", "setting-container-number", "How many avatars to list at once. [1-100]");
 	const avatarToShowInput = createElement("input");
 	avatarToShowInput.setAttribute("type", "number");
 	avatarToShowInput.setAttribute("value", settings.maxAvatars);
 	avatarToShowContainer.appendChild(avatarToShowInput);
 	settingsArea.appendChild(avatarToShowContainer);
 
-	const worldToShowContainer = createElement("label", "setting-container-number", "How many worlds to list. 1-100");
+	const worldToShowContainer = createElement("label", "setting-container-number", "How many worlds to list. [1-100]");
 	const worldToShowInput = createElement("input");
 	worldToShowInput.setAttribute("type", "number");
 	worldToShowInput.setAttribute("value", settings.maxWorlds);
@@ -213,13 +237,13 @@ function buildSettingsPage (content) {
 			return;
 		}
 		const newSettings = {
+			useCarbon: useCarbon,
 			allowPost: isChecked,
 			maxAvatars: parseInt(maxAvatars),
 			maxWorlds: parseInt(maxWorlds),
 			notifTimeout: parseInt(notifTimeout),
 			sortingOrder: sortMethodSelect.value
 		};
-		api.userSettings = newSettings;
 		api.saveSettings(newSettings);
 		sendNotification("Settings saved.", "alert-ok");
 	});
@@ -301,7 +325,7 @@ function buildAvatarsPage(content, offset) {
 				return
 			}
 			avatarPage--;
-			buildAvatarsPage(content, avatarPage * api.userSettings.maxAvatars)
+			buildAvatarsPage(content, avatarPage * api.getUserSettings().maxAvatars)
 		});
 		const next = createElement("div", "page-nav-next", "Next");
 		next.addEventListener("click", () => {
@@ -309,7 +333,7 @@ function buildAvatarsPage(content, offset) {
 				return;
 			}
 			avatarPage++;
-			buildAvatarsPage(content, avatarPage * api.userSettings.maxAvatars);
+			buildAvatarsPage(content, avatarPage * api.getUserSettings().maxAvatars);
 		});
 		pageNav.appendChild(prev);
 		pageNav.appendChild(pageContainer);
@@ -419,6 +443,10 @@ function buildMePage(content) {
  */
 function buildFriendsPage(content) {
 	startLoading();
+	const canSend = canSendRequests("friends-list");
+	if (!canSend) {
+		sendNotification("You are seeing an older version of your friends list. Try again in " + whenNextRequest("friends-list") + " for an up to date version.", "alert-ok")
+	}
 	api.getFriends((data) => {
 		content.innerHTML = '';
 		const container = createElement("div", "friends-container");
@@ -467,11 +495,35 @@ function buildFriendsPage(content) {
 						default:
 							clearMode = "Unknown";
 					}
-					friendWorldName.addEventListener("click", () => {
-						startLoading();
+					friendWorldName.addEventListener("click", (e) => {
 						const regex1 = /(.+?):(.+)$/g;
 						const gs = regex1.exec(world);
-						api.getWorldMetadata(gs[1], gs[2], (data) => {
+						if (e.shiftKey) {
+							console.log("true");
+							if (canSendRequests("world")) {
+								startLoading();
+								const key = gs[1];
+								const load = worldsToLoad[key];
+								api.getWorld(key, false, (data) => {
+									for (let i = 0; i < load.length; i++) {
+										load[i].innerText = data.name;
+										load[i].setAttribute("title", data.name);
+										load[i].setAttribute("class", "friend-world")
+									}
+									stopLoading();
+								});
+							} else {
+								sendNotification("You cannot load a world for another " + whenNextRequest("world") + ".", "alert-error")
+							}
+							return;
+						}
+						startLoading();
+						const canLoadMeta = canSendRequests(gs[2]);
+						if (!canLoadMeta) {
+							sendNotification("You are seeing an older version of this world. Try again in " + whenNextRequest(gs[2]) + " for an up to date version.", "alert-ok")
+						}
+						api.getWorldMetadata(gs[1], gs[2], !canLoadMeta, (data) => {
+							console.log(data);
 							const listUsers = [];
 							if (data === false) {
 								stopLoading();
@@ -499,7 +551,28 @@ function buildFriendsPage(content) {
 				} else {
 					clearMode = "Public";
 					friendWorldName.setAttribute("class", "friend-world-nothing");
-					friendWorldName.addEventListener('click', () => {
+					friendWorldName.addEventListener('click', (e) => {
+						const regex1 = /(.+?):(.+)$/g;
+						const gs = regex1.exec(world);
+						if (e.shiftKey) {
+							console.log("true");
+							if (canSendRequests("world")) {
+								startLoading();
+								const key = gs[1];
+								const load = worldsToLoad[key];
+								api.getWorld(key, false, (data) => {
+									for (let i = 0; i < load.length; i++) {
+										load[i].innerText = data.name;
+										load[i].setAttribute("title", data.name);
+										load[i].setAttribute("class", "friend-world")
+									}
+									stopLoading();
+								});
+							} else {
+								sendNotification("You cannot load a world for another " + whenNextRequest("world") + ".", "alert-error")
+							}
+							return;
+						}
 						sendNotification("Public worlds cannot be viewed due to API limitations", "alert-error");
 					});
 				}
@@ -517,21 +590,26 @@ function buildFriendsPage(content) {
 			friendEntry.appendChild(friendWorldContainer);
 			container.appendChild(friendEntry);
 		}
-
+		console.log(worldsToLoad);
 		for (let key in worldsToLoad) {
 			if (worldsToLoad.hasOwnProperty(key)) {
 				const load = worldsToLoad[key];
-				api.getWorld(key, (data) => {
+				api.getWorld(key, true, (data) => {
 					for (let i = 0; i < load.length; i++) {
-						load[i].innerText = data.name;
-						load[i].setAttribute("title", data.name);
+						if (data === null) {
+							load[i].innerHTML = 'Shift click to load';
+							load[i].setAttribute("class", "world-load")
+						} else {
+							load[i].innerText = data.name;
+							load[i].setAttribute("title", data.name);
+						}
 					}
 				});
 			}
 		}
 		stopLoading();
 		content.appendChild(container)
-	})
+	}, !canSend)
 }
 
 /**

@@ -6,8 +6,7 @@
   "scripts": {
     "start": "electron ."
   },
-  "keywords": [
-  ],
+  "keywords": [],
   "license": "WTFNMFPL-1.0",
   "devDependencies": {
     "electron": "^2.0.0"
