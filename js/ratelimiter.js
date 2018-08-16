@@ -29,13 +29,10 @@ function whenNextRequest(ident) {
  */
 function canSendRequests(ident) {
 	const time = getEpoch();
-	console.log(time);
 	for (let i = 0; i < lastRequests.length; i++) {
 		const req = lastRequests[i];
 		if (req.type === ident) {
 			if (time < (req.sentAt + 60000)) {
-				console.log("current time: " + (time + 60000));
-				console.log("sent at:      " + req.sentAt);
 				return false;
 			}
 		}

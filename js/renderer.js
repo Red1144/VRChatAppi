@@ -142,12 +142,11 @@ buildMePage(content);
 function buildSettingsPage(content) {
 	content.innerHTML = '';
 	const settings = api.getUserSettings();
-	console.log(settings);
 	let isChecked = settings.allowPost;
 	let useCarbon = settings.useCarbon;
 	const settingsArea = createElement("div", "settings-container");
 
-	const useCarbonContainer = createElement("label", "setting-container", "Use a darker and flatter theme for the program.");
+	const useCarbonContainer = createElement("label", "setting-container", "Use a darker and flatter theme for the program. (Requires restart)");
 	const useCarbonCheckbox = createElement("input");
 	useCarbonCheckbox.setAttribute("type", "checkbox");
 	if (settings.useCarbon) {
@@ -169,7 +168,6 @@ function buildSettingsPage(content) {
 	}
 	allowPostCheckbox.onchange = () => {
 		isChecked = !isChecked;
-		console.log(isChecked);
 	};
 	const allowPostCheckmark = createElement("span", "checkmark");
 	allowPostContainer.appendChild(allowPostCheckbox);
@@ -266,7 +264,10 @@ function buildSettingsPage(content) {
 function buildAvatarsPage(content, offset) {
 	loadingAvatars = true;
 	startLoading();
-	api.getAvatars(api.getUserSettings().maxAvatars, offset, api.getUserSettings().sortingOrder, (data) => {
+	const amount = api.getUserSettings().maxAvatars;
+	const order = api.getUserSettings().sortingOrder;
+	const canLoad = canSendRequests("a:" + amount + "o:" + offset + "o:" + order + "_avatars");
+	api.getAvatars(amount, offset, order, !canLoad, (data) => {
 		content.innerHTML = '';
 		const container = createElement("div", "avatars-container");
 		for (let i = 0; i < data.length; i++) {
@@ -299,6 +300,10 @@ function buildAvatarsPage(content, offset) {
 			avatarEntry.appendChild(dlContainer);
 			container.appendChild(avatarEntry);
 			dlButton.addEventListener("click", () => {
+				if (!canSendRequests("avatardl")) {
+					sendNotification("You cannot download an avatar for another " + whenNextRequest("avatardl") + ".", "alert-error");
+					return;
+				}
 				startLoading();
 				api.getAvatar(avatar.id, (data) => {
 					if (data.unityPackageUrl === "") {
@@ -352,7 +357,11 @@ function buildAvatarsPage(content, offset) {
 // TODO cleanup
 function buildWorldsPage(content) {
 	startLoading();
-	api.getWorlds(api.getUserSettings().maxWorlds, api.getUserSettings().sortingOrder, (data) => {
+	const canLoad = canSendRequests("worlds");
+	if (!canLoad) {
+		sendNotification("You are seeing an older version of your world list. Try again in " + whenNextRequest("worlds") + " for an up to date version.", "alert-ok");
+	}
+	api.getWorlds(api.getUserSettings().maxWorlds, api.getUserSettings().sortingOrder, !canLoad, (data) => {
 		content.innerHTML = '';
 		const container = createElement("div", "avatars-container");
 		for (let i = 0; i < data.length; i++) {
@@ -385,6 +394,10 @@ function buildWorldsPage(content) {
 			avatarEntry.appendChild(dlContainer);
 			container.appendChild(avatarEntry);
 			dlButton.addEventListener("click", () => {
+				if (!canSendRequests("worlddl")) {
+					sendNotification("You cannot download a world for another " + whenNextRequest("worlddl") + ".", "alert-error");
+					return;
+				}
 				startLoading();
 				api.getOwnWorld(world.id, (data) => {
 					if (data.unityPackageUrl === "") {
@@ -499,7 +512,6 @@ function buildFriendsPage(content) {
 						const regex1 = /(.+?):(.+)$/g;
 						const gs = regex1.exec(world);
 						if (e.shiftKey) {
-							console.log("true");
 							if (canSendRequests("world")) {
 								startLoading();
 								const key = gs[1];
@@ -523,7 +535,6 @@ function buildFriendsPage(content) {
 							sendNotification("You are seeing an older version of this world. Try again in " + whenNextRequest(gs[2]) + " for an up to date version.", "alert-ok")
 						}
 						api.getWorldMetadata(gs[1], gs[2], !canLoadMeta, (data) => {
-							console.log(data);
 							const listUsers = [];
 							if (data === false) {
 								stopLoading();
@@ -555,7 +566,6 @@ function buildFriendsPage(content) {
 						const regex1 = /(.+?):(.+)$/g;
 						const gs = regex1.exec(world);
 						if (e.shiftKey) {
-							console.log("true");
 							if (canSendRequests("world")) {
 								startLoading();
 								const key = gs[1];
@@ -590,7 +600,6 @@ function buildFriendsPage(content) {
 			friendEntry.appendChild(friendWorldContainer);
 			container.appendChild(friendEntry);
 		}
-		console.log(worldsToLoad);
 		for (let key in worldsToLoad) {
 			if (worldsToLoad.hasOwnProperty(key)) {
 				const load = worldsToLoad[key];
