@@ -645,11 +645,6 @@ function buildFriendsPage(content) {
 								const key = gs[1];
 								const load = worldsToLoad[key];
 								api.getWorld(key, false, (data) => {
-									if (data.error !== undefined) {
-										sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
-										console.log("ERROR REPORT:");
-										console.log(data)
-									}
 									for (let i = 0; i < load.length; i++) {
 										load[i].innerText = data.name;
 										load[i].setAttribute("title", data.name);
@@ -709,11 +704,6 @@ function buildFriendsPage(content) {
 								const key = gs[1];
 								const load = worldsToLoad[key];
 								api.getWorld(key, false, (data) => {
-									if (data.error !== undefined) {
-										sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
-										console.log("ERROR REPORT:");
-										console.log(data)
-									}
 									for (let i = 0; i < load.length; i++) {
 										load[i].innerText = data.name;
 										load[i].setAttribute("title", data.name);
@@ -747,11 +737,6 @@ function buildFriendsPage(content) {
 			if (worldsToLoad.hasOwnProperty(key)) {
 				const load = worldsToLoad[key];
 				api.getWorld(key, true, (data) => {
-					if (data.error !== undefined) {
-						sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
-						console.log("ERROR REPORT:");
-						console.log(data)
-					}
 					for (let i = 0; i < load.length; i++) {
 						if (data === null) {
 							load[i].innerHTML = 'Shift click to load';
