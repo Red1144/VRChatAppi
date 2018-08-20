@@ -132,12 +132,9 @@ function closePopup() {
 	popup.innerHTML = '';
 }
 
-popupContainer.addEventListener("click", () => {
+document.getElementById("popup-close-btn").addEventListener('click', () => {
 	closePopup();
 });
-
-// first page to load
-buildMePage(content);
 
 function buildSettingsPage(content) {
 	content.innerHTML = '';
@@ -289,9 +286,105 @@ function buildAvatarsPage(content, offset) {
 			avatarEntry.appendChild(avatarImage);
 			avatarEntry.appendChild(avatarReleaseStatusContainer);
 
+			const editContainer = createElement("div", "edit-container");
+			const editButton = createElement("div", "edit-button");
+			const editText = createElement("a", "edit-text", "Edit Avatar");
+			const editLogo = createElement("img", "edit-logo");
+			editLogo.setAttribute("src", "./css/flaticon/png/content.png");
+			editButton.appendChild(editLogo);
+			editButton.appendChild(editText);
+			editContainer.appendChild(editButton);
+			avatarEntry.appendChild(editContainer);
+			editButton.addEventListener("click", () => {
+				if (!api.getUserSettings().allowPost) {
+					sendNotification("You must allow the program to manage your VRChat account in the settings to use this feature.", "alert-error");
+					return;
+				}
+				const popup = createElement("div", "popup-container-inner");
+				const popupInfoContainer = createElement("div", "popup-info-container");
+				const popupInfo = createElement("a", "popup-info", "Edit " + avatar.name);
+				const settingsContainer = createElement("div", "avatar-settings-container");
+				popupInfoContainer.appendChild(popupInfo);
+				popup.appendChild(popupInfoContainer);
+
+				const avatarNameContainer = createElement("label", "setting-container-name", "Avatar name");
+				const avatarNameInput = createElement("input");
+
+				avatarNameInput.setAttribute("type", "text");
+				avatarNameInput.setAttribute("placeholder", avatar.name);
+				avatarNameContainer.appendChild(avatarNameInput);
+				settingsContainer.appendChild(avatarNameContainer);
+
+				const avatarImageContainer = createElement("label", "setting-container-name", "Avatar image");
+				const avatarImageInput = createElement("input");
+				const avatarImageHelp = createElement("div", "avatar-image-help tooltip", "(help?)");
+				const avatarImageHelpTooltip = createElement("span", "tooltiptext", "For best results the image should be 1200x900 pixels or have have an aspect ratio of 4:3.");
+				avatarImageHelp.appendChild(avatarImageHelpTooltip);
+				avatarImageInput.onchange = () => {
+					const regex = /(https?:\/\/.*\.(?:png|jpg))/;
+					if (regex.test(avatarImageInput.value)) {
+						avatarImageInput.style.borderColor = "green";
+					} else {
+						avatarImageInput.style.borderColor = "red";
+					}
+				};
+				avatarImageInput.setAttribute("type", "text");
+				avatarImageInput.setAttribute("placeholder", avatar.imageUrl);
+				avatarImageContainer.appendChild(avatarImageInput);
+				settingsContainer.appendChild(avatarImageContainer);
+				avatarImageContainer.appendChild(avatarImageHelp);
+
+				const saveBtnContainer = createElement("div", "edit-container save-container");
+				const saveBtn = createElement("div", "edit-button save-button");
+				const saveBtnText = createElement("a", "edit-text", "Save");
+				saveBtn.appendChild(saveBtnText);
+				saveBtnContainer.appendChild(saveBtn);
+				saveBtn.addEventListener('click', () => {
+					const newSettings = {};
+					const newName = avatarNameInput.value;
+					const newImage = avatarImageInput.value;
+					if (newName === '' && newImage === '') {
+						sendNotification("Nothing interesting happens.", "alert-ok");
+						return;
+					}
+
+					const regex = /(https?:\/\/.*\.(?:png|jpg))/;
+					if (!regex.test(newImage) && newImage !== '') {
+						sendNotification("Invalid image URL.", "alert-error");
+						return;
+					}
+
+					if (newName !== '') {
+						newSettings.name = newName;
+					}
+
+					if (newImage !== '') {
+						newSettings.imageUrl = newImage;
+					}
+
+					startLoading();
+					console.log(avatar.id);
+					if (!canSendRequests("avatar_update")) {
+						sendNotification("You cannot update an avatar for another " + whenNextRequest('avatar_update') + ".", "alert-error");
+						stopLoading();
+						return;
+					}
+					api.saveAvatar('' + avatar.id, newSettings, (data) => {
+						console.log(newSettings);
+						console.log(data);
+						sendNotification("Avatar saved. Please give VRChat servers minute or two to update your avatar.", "alert-ok");
+						stopLoading();
+						closePopup();
+					})
+				});
+				popup.appendChild(settingsContainer);
+				popup.appendChild(saveBtnContainer);
+				setPopup(popup);
+			});
+
 			const dlContainer = createElement("div", "dl-container");
 			const dlButton = createElement("div", "dl-button");
-			const dlText = createElement("a", "dl-text", ".unitypackage");
+			const dlText = createElement("a", "dl-text", "Download");
 			const dlLogo = createElement("img", "dl-logo");
 			dlLogo.setAttribute("src", "./css/flaticon/png/UnityLogo.png");
 			dlButton.appendChild(dlLogo);
@@ -808,3 +901,5 @@ function createElement(type, classes, innerText) {
 	}
 	return div;
 }
+// first page to load
+buildMePage(content);

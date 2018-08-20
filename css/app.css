@@ -123,6 +123,32 @@ html, body {
 	font-size: 32px;
 }
 
+.close-button {
+	 background-color: orangered;
+ }
+
+.save-button {
+	background-color: #00ff00 !important;
+}
+
+textarea:focus, input:focus{
+	outline: none;
+}
+
+.save-container {
+	margin-left: auto;
+	margin-right: auto;
+	width: 368px;
+	margin-top: -68px !important;
+}
+
+.close-container {
+	margin-left: auto;
+	margin-right: auto;
+	width: 368px;
+	margin-top: -64px !important;
+}
+
 .user-list-container {
 	display: flex;
 	flex-flow: column;
@@ -132,7 +158,7 @@ html, body {
 	margin-left: 32px;
 	margin-right: 32px;
 	height: 256px;
-	margin-top: 32px;
+	margin-top: 16px;
 	font-size: 24px;
 	box-shadow: 10px 10px 32px 0 rgba(0, 0, 0, 0.75);
 	background-color: #828282;
@@ -439,6 +465,7 @@ html, body {
 	box-shadow: 2px 2px 16px 0 rgba(0, 0, 0, 0.5);
 	padding: 4px;
 	width: 256px;
+	height: 192px;
 }
 
 .avatar-status-container {
@@ -468,29 +495,32 @@ html, body {
 	overflow: hidden;
 }
 
-.dl-container {
+.edit-container, .dl-container {
 	margin-top: 8px;
 }
 
-.dl-logo {
+.dl-logo, .edit-logo {
+	align-self: center;
 	width: 32px;
-	margin-bottom: -4px;
 }
 
-.dl-text {
+.edit-text, .dl-text {
+	width: 100%;
+	text-align: center;
 	user-select: none;
 	font-size: 32px;
 	margin-left: 8px;
 }
 
-.dl-button {
+.edit-button, .dl-button {
+	display: flex;
 	cursor: pointer;
 	padding: 8px;
 	background-color: #6cccfe;
 	transition: box-shadow 0.3s;
 }
 
-.dl-button:hover {
+.edit-button:hover, .dl-button:hover {
 	box-shadow: 2px 2px 16px 0 rgba(0, 0, 0, 0.5);
 }
 
@@ -769,4 +799,68 @@ input[type=number]::-webkit-inner-spin-button {
 
 .save-settings-button:hover {
 	box-shadow: 2px 2px 16px 0 rgba(0, 0, 0, 0.5);
+}
+
+.avatar-settings-container {
+	display: flex;
+	flex-flow: column;
+	align-items: center;
+	padding-top: 16px;
+	height: 256px;
+	margin: 16px 16px 32px;
+	font-size: 24px;
+}
+
+.setting-container-name {
+	display: flex;
+	position: relative;
+	margin-bottom: 16px;
+	font-size: 28px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	flex-direction: column;
+	text-align: center;
+}
+
+.setting-container-name input {
+	font-size: 32px;
+	text-align: center;
+	top: 32px;
+	height: 36px;
+	width: 352px;
+	background-color: #eee;
+	border: solid black 2px;
+}
+
+.tooltip {
+	position: relative;
+	display: inline-block;
+}
+
+.tooltip .tooltiptext {
+	visibility: hidden;
+	width: 256px;
+	background-color: black;
+	color: #fff;
+	text-align: center;
+	padding: 5px 5px;
+	border-radius: 6px;
+
+	position: absolute;
+	z-index: 1;
+	bottom: 100%;
+	left: 50%;
+	margin-left: -128px;
+}
+
+.tooltip:hover .tooltiptext {
+	visibility: visible;
+}
+
+.avatar-image-help {
+	margin-top: 8px;
+	font-size: 24px;
+	color: #373737;;
 }
