@@ -72,6 +72,10 @@ function getMainWindow() {
 
 module.exports = {
 	mainWindow: getMainWindow(),
+	getElectronMainWindow: () => {
+		return getMainWindow();
+	},
+
 	download: (url) => {
 		download(url)
 	}

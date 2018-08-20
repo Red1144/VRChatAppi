@@ -69,7 +69,7 @@ let userSettings = {
  * if this is set to false in production I fucked up.
  * @type {boolean}
  */
-const enableTokenReint = false;
+const enableTokenReint = true;
 
 /**
  * Clears the world cache

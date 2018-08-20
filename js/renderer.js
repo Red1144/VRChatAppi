@@ -13,6 +13,14 @@ const popup = document.getElementById("popup");
 let loadingAvatars = false;
 let avatarPage = 0;
 
+// Dev tools
+document.addEventListener("keydown", function (e) {
+	if (e.which === 123) {
+		main.getElectronMainWindow().toggleDevTools();
+	} else if (e.which === 116) {
+		location.reload();
+	}
+});
 
 if (api.getUserSettings().useCarbon) {
 	const node = document.getElementById("css-theme");
@@ -157,7 +165,7 @@ function buildSettingsPage(content) {
 	useCarbonContainer.appendChild(useCarbonCheckmark);
 	settingsArea.appendChild(useCarbonContainer);
 
-	const allowPostContainer = createElement("label", "setting-container", "[Reserved for future updates] Allow the program to manage and modify data on your VRChat account.");
+	const allowPostContainer = createElement("label", "setting-container", "Allow the program to manage and modify data on your VRChat account.");
 	const allowPostCheckbox = createElement("input");
 	allowPostCheckbox.setAttribute("type", "checkbox");
 	if (settings.allowPost) {
