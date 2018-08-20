@@ -520,6 +520,8 @@ function buildWorldsPage(content) {
 				api.getOwnWorld(world.id, (data) => {
 					if (data.error !== undefined) {
 						sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+						console.log("ERROR REPORT:");
+						console.log(data)
 					}
 					if (data.unityPackageUrl === "") {
 						sendNotification("This world cannot be downloaded for unknown reasons.", "alert-error");
@@ -645,6 +647,8 @@ function buildFriendsPage(content) {
 								api.getWorld(key, false, (data) => {
 									if (data.error !== undefined) {
 										sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+										console.log("ERROR REPORT:");
+										console.log(data)
 									}
 									for (let i = 0; i < load.length; i++) {
 										load[i].innerText = data.name;
@@ -666,6 +670,8 @@ function buildFriendsPage(content) {
 						api.getWorldMetadata(gs[1], gs[2], !canLoadMeta, (data) => {
 							if (data.error !== undefined) {
 								sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+								console.log("ERROR REPORT:");
+								console.log(data)
 							}
 							const listUsers = [];
 							if (data === false) {
@@ -705,6 +711,8 @@ function buildFriendsPage(content) {
 								api.getWorld(key, false, (data) => {
 									if (data.error !== undefined) {
 										sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+										console.log("ERROR REPORT:");
+										console.log(data)
 									}
 									for (let i = 0; i < load.length; i++) {
 										load[i].innerText = data.name;
@@ -741,6 +749,8 @@ function buildFriendsPage(content) {
 				api.getWorld(key, true, (data) => {
 					if (data.error !== undefined) {
 						sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+						console.log("ERROR REPORT:");
+						console.log(data)
 					}
 					for (let i = 0; i < load.length; i++) {
 						if (data === null) {
@@ -956,5 +966,6 @@ function createElement(type, classes, innerText) {
 	}
 	return div;
 }
+
 // first page to load
 buildMePage(content);
