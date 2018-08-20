@@ -313,6 +313,7 @@ function buildAvatarsPage(content, offset) {
 					sendNotification("You must allow the program to manage your VRChat account in the settings to use this feature.", "alert-error");
 					return;
 				}
+				sendNotification("Always remember to backup your models in case something goes wrong!", "alert-ok");
 				const popup = createElement("div", "popup-container-inner");
 				const popupInfoContainer = createElement("div", "popup-info-container");
 				const popupInfo = createElement("a", "popup-info", "Edit " + avatar.name);
