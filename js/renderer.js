@@ -273,6 +273,11 @@ function buildAvatarsPage(content, offset) {
 	const order = api.getUserSettings().sortingOrder;
 	const canLoad = canSendRequests("a:" + amount + "o:" + offset + "o:" + order + "_avatars");
 	api.getAvatars(amount, offset, order, !canLoad, (data) => {
+		if (data.error !== undefined) {
+			sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+			console.log("ERROR REPORT:");
+			console.log(data)
+		}
 		content.innerHTML = '';
 		const container = createElement("div", "avatars-container");
 		for (let i = 0; i < data.length; i++) {
@@ -378,6 +383,9 @@ function buildAvatarsPage(content, offset) {
 						return;
 					}
 					api.saveAvatar('' + avatar.id, newSettings, (data) => {
+						if (data.error !== undefined) {
+							sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+						}
 						console.log(newSettings);
 						console.log(data);
 						sendNotification("Avatar saved. Please give VRChat servers minute or two to update your avatar.", "alert-ok");
@@ -407,6 +415,10 @@ function buildAvatarsPage(content, offset) {
 				}
 				startLoading();
 				api.getAvatar(avatar.id, (data) => {
+					if (data.error !== undefined) {
+						sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+					}
+
 					if (data.unityPackageUrl === "") {
 						sendNotification("This avatar cannot be downloaded for unknown reasons.", "alert-error");
 						stopLoading();
@@ -463,6 +475,11 @@ function buildWorldsPage(content) {
 		sendNotification("You are seeing an older version of your world list. Try again in " + whenNextRequest("worlds") + " for an up to date version.", "alert-ok");
 	}
 	api.getWorlds(api.getUserSettings().maxWorlds, api.getUserSettings().sortingOrder, !canLoad, (data) => {
+		if (data.error !== undefined) {
+			sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+			console.log("ERROR REPORT:");
+			console.log(data)
+		}
 		content.innerHTML = '';
 		const container = createElement("div", "avatars-container");
 		for (let i = 0; i < data.length; i++) {
@@ -501,6 +518,9 @@ function buildWorldsPage(content) {
 				}
 				startLoading();
 				api.getOwnWorld(world.id, (data) => {
+					if (data.error !== undefined) {
+						sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+					}
 					if (data.unityPackageUrl === "") {
 						sendNotification("This world cannot be downloaded for unknown reasons.", "alert-error");
 						stopLoading();
@@ -562,6 +582,11 @@ function buildFriendsPage(content) {
 		sendNotification("You are seeing an older version of your friends list. Try again in " + whenNextRequest("friends-list") + " for an up to date version.", "alert-ok")
 	}
 	api.getFriends((data) => {
+		if (data.error !== undefined) {
+			sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+			console.log("ERROR REPORT:");
+			console.log(data)
+		}
 		content.innerHTML = '';
 		const container = createElement("div", "friends-container");
 		const worldsToLoad = [];
@@ -618,6 +643,9 @@ function buildFriendsPage(content) {
 								const key = gs[1];
 								const load = worldsToLoad[key];
 								api.getWorld(key, false, (data) => {
+									if (data.error !== undefined) {
+										sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+									}
 									for (let i = 0; i < load.length; i++) {
 										load[i].innerText = data.name;
 										load[i].setAttribute("title", data.name);
@@ -636,6 +664,9 @@ function buildFriendsPage(content) {
 							sendNotification("You are seeing an older version of this world. Try again in " + whenNextRequest(gs[2]) + " for an up to date version.", "alert-ok")
 						}
 						api.getWorldMetadata(gs[1], gs[2], !canLoadMeta, (data) => {
+							if (data.error !== undefined) {
+								sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+							}
 							const listUsers = [];
 							if (data === false) {
 								stopLoading();
@@ -672,6 +703,9 @@ function buildFriendsPage(content) {
 								const key = gs[1];
 								const load = worldsToLoad[key];
 								api.getWorld(key, false, (data) => {
+									if (data.error !== undefined) {
+										sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+									}
 									for (let i = 0; i < load.length; i++) {
 										load[i].innerText = data.name;
 										load[i].setAttribute("title", data.name);
@@ -705,6 +739,9 @@ function buildFriendsPage(content) {
 			if (worldsToLoad.hasOwnProperty(key)) {
 				const load = worldsToLoad[key];
 				api.getWorld(key, true, (data) => {
+					if (data.error !== undefined) {
+						sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+					}
 					for (let i = 0; i < load.length; i++) {
 						if (data === null) {
 							load[i].innerHTML = 'Shift click to load';
@@ -738,6 +775,11 @@ function buildModerationsPage(content) {
 	againstContainer.appendChild(againstList);
 	const cardContainer = createElement("div", "card-container");
 	api.modGetAgainstMe((data) => {
+		if (data.error !== undefined) {
+			sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+			console.log("ERROR REPORT:");
+			console.log(data)
+		}
 		const users = {};
 		for (let i = 0; i < data.length; i++) {
 			const mod = data[i];
@@ -814,6 +856,11 @@ function buildModerationsPage(content) {
 	const mineList = createElement("div", "mine-list");
 	mineContainer.appendChild(mineList);
 	api.modGetMine((data) => {
+		if (data.error !== undefined) {
+			sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+			console.log("ERROR REPORT:");
+			console.log(data)
+		}
 		const users = {};
 		for (let i = 0; i < data.length; i++) {
 			const mod = data[i];
