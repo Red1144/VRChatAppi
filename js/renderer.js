@@ -150,7 +150,7 @@ function buildSettingsPage(content) {
 	let isChecked = settings.allowPost;
 	let useCarbon = settings.useCarbon;
 	const settingsArea = createElement("div", "settings-container");
-
+	
 	const useCarbonContainer = createElement("label", "setting-container", "Use a darker and flatter theme for the program. (Requires restart)");
 	const useCarbonCheckbox = createElement("input");
 	useCarbonCheckbox.setAttribute("type", "checkbox");
@@ -164,7 +164,7 @@ function buildSettingsPage(content) {
 	useCarbonContainer.appendChild(useCarbonCheckbox);
 	useCarbonContainer.appendChild(useCarbonCheckmark);
 	settingsArea.appendChild(useCarbonContainer);
-
+	
 	const allowPostContainer = createElement("label", "setting-container", "Allow the program to manage and modify data on your VRChat account.");
 	const allowPostCheckbox = createElement("input");
 	allowPostCheckbox.setAttribute("type", "checkbox");
@@ -178,32 +178,32 @@ function buildSettingsPage(content) {
 	allowPostContainer.appendChild(allowPostCheckbox);
 	allowPostContainer.appendChild(allowPostCheckmark);
 	settingsArea.appendChild(allowPostContainer);
-
+	
 	const avatarToShowContainer = createElement("label", "setting-container-number", "How many avatars to list at once. [1-100]");
 	const avatarToShowInput = createElement("input");
 	avatarToShowInput.setAttribute("type", "number");
 	avatarToShowInput.setAttribute("value", settings.maxAvatars);
 	avatarToShowContainer.appendChild(avatarToShowInput);
 	settingsArea.appendChild(avatarToShowContainer);
-
+	
 	const worldToShowContainer = createElement("label", "setting-container-number", "How many worlds to list. [1-100]");
 	const worldToShowInput = createElement("input");
 	worldToShowInput.setAttribute("type", "number");
 	worldToShowInput.setAttribute("value", settings.maxWorlds);
 	worldToShowContainer.appendChild(worldToShowInput);
 	settingsArea.appendChild(worldToShowContainer);
-
+	
 	const notifTimeoutContainer = createElement("label", "setting-container-number", "Notification timeout in seconds");
 	const notifTimeoutInput = createElement("input");
 	notifTimeoutInput.setAttribute("type", "number");
 	notifTimeoutInput.setAttribute("value", settings.notifTimeout);
 	notifTimeoutContainer.appendChild(notifTimeoutInput);
 	settingsArea.appendChild(notifTimeoutContainer);
-
+	
 	const sortMethodContainer = createElement("label", "setting-container-select", "List sort mode");
 	const sortMethodSelect = createElement("select", "select-dropdown");
 	sortMethodSelect.setAttribute("value", settings.sortingOrder);
-
+	
 	const updated = createElement("option", "select-option", "Updated");
 	updated.setAttribute("value", "updated");
 	const created = createElement("option", "select-option", "Created");
@@ -226,7 +226,7 @@ function buildSettingsPage(content) {
 	sortMethodSelect.appendChild(nothing);
 	sortMethodContainer.appendChild(sortMethodSelect);
 	settingsArea.appendChild(sortMethodContainer);
-
+	
 	const clearWorldCacheContainer = createElement("div", "clear-cache-container");
 	const clearWorldCacheButton = createElement("div", "clear-cache-button", "Clear cache");
 	const saveSettings = createElement("div", "save-settings-button", "Save");
@@ -257,7 +257,7 @@ function buildSettingsPage(content) {
 	clearWorldCacheContainer.appendChild(saveSettings);
 	clearWorldCacheContainer.appendChild(clearWorldCacheButton);
 	settingsArea.appendChild(clearWorldCacheContainer);
-
+	
 	content.appendChild(settingsArea)
 }
 
@@ -274,7 +274,7 @@ function buildAvatarsPage(content, offset) {
 	const canLoad = canSendRequests("a:" + amount + "o:" + offset + "o:" + order + "_avatars");
 	api.getAvatars(amount, offset, order, !canLoad, (data) => {
 		if (data.error !== undefined) {
-			sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+			sendNotification("An error occurred, press F12 to see full details: " + data.error.message, "alert-error");
 			console.log("ERROR REPORT:");
 			console.log(data)
 		}
@@ -282,23 +282,23 @@ function buildAvatarsPage(content, offset) {
 		const container = createElement("div", "avatars-container");
 		for (let i = 0; i < data.length; i++) {
 			const avatar = data[i];
-
+			
 			const avatarEntry = createElement("div", "avatar-entry");
-
+			
 			const avatarNameContainer = createElement("div", "avatar-name-container");
 			const avatarName = createElement("a", "avatar-name", avatar.name);
 			avatarNameContainer.appendChild(avatarName);
-
+			
 			const avatarImage = createElement("img", "avatar-image");
 			avatarImage.setAttribute("src", avatar.thumbnailImageUrl);
 			const avatarReleaseStatusContainer = createElement("div", "avatar-status-container");
 			const avatarReleaseStatus = createElement("a", "avatar-release-status", avatar.releaseStatus);
 			avatarReleaseStatusContainer.appendChild(avatarReleaseStatus);
-
+			
 			avatarEntry.appendChild(avatarNameContainer);
 			avatarEntry.appendChild(avatarImage);
 			avatarEntry.appendChild(avatarReleaseStatusContainer);
-
+			
 			const editContainer = createElement("div", "edit-container");
 			const editButton = createElement("div", "edit-button");
 			const editText = createElement("a", "edit-text", "Edit Avatar");
@@ -320,15 +320,15 @@ function buildAvatarsPage(content, offset) {
 				const settingsContainer = createElement("div", "avatar-settings-container");
 				popupInfoContainer.appendChild(popupInfo);
 				popup.appendChild(popupInfoContainer);
-
+				
 				const avatarNameContainer = createElement("label", "setting-container-name", "Avatar name");
 				const avatarNameInput = createElement("input");
-
+				
 				avatarNameInput.setAttribute("type", "text");
 				avatarNameInput.setAttribute("placeholder", avatar.name);
 				avatarNameContainer.appendChild(avatarNameInput);
 				settingsContainer.appendChild(avatarNameContainer);
-
+				
 				const avatarImageContainer = createElement("label", "setting-container-name", "Avatar image");
 				const avatarImageInput = createElement("input");
 				const avatarImageHelp = createElement("div", "avatar-image-help tooltip", "(help?)");
@@ -347,7 +347,7 @@ function buildAvatarsPage(content, offset) {
 				avatarImageContainer.appendChild(avatarImageInput);
 				settingsContainer.appendChild(avatarImageContainer);
 				avatarImageContainer.appendChild(avatarImageHelp);
-
+				
 				const saveBtnContainer = createElement("div", "edit-container save-container");
 				const saveBtn = createElement("div", "edit-button save-button");
 				const saveBtnText = createElement("a", "edit-text", "Save");
@@ -361,21 +361,21 @@ function buildAvatarsPage(content, offset) {
 						sendNotification("Nothing interesting happens.", "alert-ok");
 						return;
 					}
-
+					
 					const regex = /(https?:\/\/.*\.(?:png|jpg))/;
 					if (!regex.test(newImage) && newImage !== '') {
 						sendNotification("Invalid image URL.", "alert-error");
 						return;
 					}
-
+					
 					if (newName !== '') {
 						newSettings.name = newName;
 					}
-
+					
 					if (newImage !== '') {
 						newSettings.imageUrl = newImage;
 					}
-
+					
 					startLoading();
 					console.log(avatar.id);
 					if (!canSendRequests("avatar_update")) {
@@ -385,7 +385,7 @@ function buildAvatarsPage(content, offset) {
 					}
 					api.saveAvatar('' + avatar.id, newSettings, (data) => {
 						if (data.error !== undefined) {
-							sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+							sendNotification("An error occurred, press F12 to see full details: " + data.error.message, "alert-error");
 						}
 						console.log(newSettings);
 						console.log(data);
@@ -398,7 +398,7 @@ function buildAvatarsPage(content, offset) {
 				popup.appendChild(saveBtnContainer);
 				setPopup(popup);
 			});
-
+			
 			const dlContainer = createElement("div", "dl-container");
 			const dlButton = createElement("div", "dl-button");
 			const dlText = createElement("a", "dl-text", "Download");
@@ -417,9 +417,9 @@ function buildAvatarsPage(content, offset) {
 				startLoading();
 				api.getAvatar(avatar.id, (data) => {
 					if (data.error !== undefined) {
-						sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+						sendNotification("An error occurred, press F12 to see full details: " + data.error.message, "alert-error");
 					}
-
+					
 					if (data.unityPackageUrl === "") {
 						sendNotification("This avatar cannot be downloaded for unknown reasons.", "alert-error");
 						stopLoading();
@@ -477,7 +477,7 @@ function buildWorldsPage(content) {
 	}
 	api.getWorlds(api.getUserSettings().maxWorlds, api.getUserSettings().sortingOrder, !canLoad, (data) => {
 		if (data.error !== undefined) {
-			sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+			sendNotification("An error occurred, press F12 to see full details: " + data.error.message, "alert-error");
 			console.log("ERROR REPORT:");
 			console.log(data)
 		}
@@ -485,23 +485,23 @@ function buildWorldsPage(content) {
 		const container = createElement("div", "avatars-container");
 		for (let i = 0; i < data.length; i++) {
 			const world = data[i];
-
+			
 			const avatarEntry = createElement("div", "avatar-entry");
-
+			
 			const avatarNameContainer = createElement("div", "avatar-name-container");
 			const avatarName = createElement("a", "avatar-name", world.name);
 			avatarNameContainer.appendChild(avatarName);
-
+			
 			const avatarImage = createElement("img", "avatar-image");
 			avatarImage.setAttribute("src", world.thumbnailImageUrl);
 			const avatarReleaseStatusContainer = createElement("div", "avatar-status-container");
 			const avatarReleaseStatus = createElement("a", "avatar-release-status", world.releaseStatus);
 			avatarReleaseStatusContainer.appendChild(avatarReleaseStatus);
-
+			
 			avatarEntry.appendChild(avatarNameContainer);
 			avatarEntry.appendChild(avatarImage);
 			avatarEntry.appendChild(avatarReleaseStatusContainer);
-
+			
 			const dlContainer = createElement("div", "dl-container");
 			const dlButton = createElement("div", "dl-button");
 			const dlText = createElement("a", "dl-text", ".unitypackage");
@@ -520,7 +520,7 @@ function buildWorldsPage(content) {
 				startLoading();
 				api.getOwnWorld(world.id, (data) => {
 					if (data.error !== undefined) {
-						sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+						sendNotification("An error occurred, press F12 to see full details: " + data.error.message, "alert-error");
 						console.log("ERROR REPORT:");
 						console.log(data)
 					}
@@ -551,25 +551,191 @@ function buildMePage(content) {
 	const welcome = createElement("div", "welcome");
 	const names = createElement("div", "names");
 	const picture = createElement("div", "profile-picture");
-
+	
 	const loginInfo = api.getLoginInfo();
-
+	
 	names.appendChild(createElement("a", "display-name", loginInfo.displayName));
 	names.appendChild(createElement("a", "user-name", loginInfo.username));
-
+	
 	const pic = createElement("img", "profile-picture-img");
 	pic.setAttribute("src", loginInfo.avatarImage);
 	picture.appendChild(pic);
 	picture.addEventListener('click', () => {
 		sendNotification("This is not an easter egg", "alert-ok");
 	});
-
+	
 	const wTextCont = createElement("div", "welcome-text-container");
 	wTextCont.appendChild(createElement("a", "welcome-text", "Welcome"));
 	welcome.appendChild(wTextCont);
 	welcome.appendChild(picture);
 	welcome.appendChild(names);
 	centerChild.appendChild(welcome);
+	
+	// build tags window
+	const tags = api.getUserTags();
+	const badges = createElement("div", "badges-window");
+	const badgesHeaderContainer = createElement("div", "badges-header-container");
+	const badgesHeader = createElement("a", "badges-header", "Trust level");
+	badgesHeaderContainer.appendChild(badgesHeader);
+	badges.appendChild(badgesHeaderContainer);
+	const trustMeterContainer = createElement("div", "trust-meter-container");
+	const trustMeterBackground = createElement("div", "trust-meter-bg");
+	const trustMeter = createElement("div", "trust-meter");
+	const trustMeterShrinker = createElement("div", "trust-meter-shrinker");
+	trustMeterBackground.appendChild(trustMeter);
+	trustMeterBackground.appendChild(trustMeterShrinker);
+	trustMeterContainer.appendChild(trustMeterBackground);
+	const trustInfoContainer = createElement("div", "trust-info-container");
+	const trustInfo = createElement("div", "trust-info tooltip");
+	const trustTooltip = createElement("a", "tooltiptext");
+	const trustImage = createElement("img", "trust-image");
+	trustInfoContainer.appendChild(trustImage);
+	trustInfoContainer.appendChild(trustInfo);
+	trustMeterContainer.appendChild(trustInfoContainer);
+	badges.appendChild(trustMeterContainer);
+	const badgesContainer = createElement("div", "badges-container");
+	const badgesArea = createElement("div", "badges-area");
+	badgesContainer.appendChild(badgesArea);
+	badges.appendChild(badgesContainer);
+	let trust_level = 0;
+	// Just... don't look please
+	trust_level =
+		tags.indexOf("system_trust_legend") > -1 ? 6 :
+			trust_level = tags.indexOf("system_trust_veteran") > -1 ? 5 :
+				trust_level = tags.indexOf("system_trust_trusted") > -1 ? 4 :
+					trust_level = tags.indexOf("system_trust_known") > -1 ? 3 :
+						trust_level = tags.indexOf("system_trust_intermediate") > -1 ? 2 :
+							trust_level = tags.indexOf("system_trust_basic") > -1 ? 1 : 0;
+	
+	// Animation workaround
+	setTimeout(() => {
+		switch (trust_level) {
+			case 0: {
+				trustMeterShrinker.style.width = "100%";
+				trustInfo.innerText = "Untrusted";
+				trustImage.setAttribute("src", "./css/emojione/0.png");
+				trustTooltip.innerText = "The rock bottom; your avatar rights are restricted until you achieve the next trust rating. The only way from here is up!";
+				break;
+			}
+			case 1: {
+				trustMeterShrinker.style.width = "84%";
+				trustInfo.innerText = "Basic";
+				trustImage.setAttribute("src", "./css/emojione/1.png");
+				trustTooltip.innerText = "Second lowest trust rating; you've just been granted the ability to upload your own content to the game. Good luck out there!";
+				break;
+			}
+			case 2: {
+				trustMeterShrinker.style.width = "68%";
+				trustInfo.innerText = "Neutral";
+				trustImage.setAttribute("src", "./css/emojione/2.png");
+				trustTooltip.innerText = "Third lowest trust rating; you've probably just started to upload content to the game and made a few friends. Good luck!";
+				break;
+			}
+			case 3: {
+				trustMeterShrinker.style.width = "52%";
+				trustInfo.innerText = "Known";
+				trustImage.setAttribute("src", "./css/emojione/3.png");
+				trustTooltip.innerText = "Fourth highest trust rating; you've made handful of friends and played a bit but there's still a long road ahead of you.";
+				break;
+			}
+			case 4: {
+				trustMeterShrinker.style.width = "36%";
+				trustInfo.innerText = "Trusted";
+				trustImage.setAttribute("src", "./css/emojione/4.png");
+				trustTooltip.innerText = "Third highest trust rating; you've played quite a lot and made yourself known to the community.";
+				break;
+			}
+			case 5: {
+				trustMeterShrinker.style.width = "20%";
+				trustInfo.innerText = "Veteran";
+				trustImage.setAttribute("src", "./css/emojione/5.png");
+				trustTooltip.innerText = "Second highest trust rating; you've played a lot and have probably left your mark on the community already.";
+				break;
+			}
+			case 6: {
+				trustMeterShrinker.style.width = "0";
+				trustInfo.innerText = "Legend";
+				trustImage.setAttribute("src", "./css/emojione/6.png");
+				trustTooltip.innerText = "Best possible trust ranking; you're an outstanding member of the community. Keep at it!";
+				break;
+			}
+		}
+		trustInfo.appendChild(trustTooltip);
+	}, 0);
+	
+	for (let i = 0; i < tags.length; i++) {
+		const badgeIcon = createElement("img", "badge");
+		switch (tags[i]) {
+			case "system_feedback_access": {
+				badgeIcon.setAttribute("src", "./css/emojione/feedback1.png");
+				badgeIcon.setAttribute("title", "Can send feedback");
+				break;
+			}
+			case "system_avatar_access": {
+				badgeIcon.setAttribute("src", "./css/emojione/content_rights.png");
+				badgeIcon.setAttribute("title", "Can upload avatars");
+				break;
+			}
+			case "system_world_access": {
+				badgeIcon.setAttribute("src", "./css/emojione/map.png");
+				badgeIcon.setAttribute("title", "Can upload worlds");
+				break;
+			}
+			case "system_legend": {
+				badgeIcon.setAttribute("src", "./css/emojione/legend.png");
+				badgeIcon.setAttribute("title", "Played a lot");
+				break;
+			}
+			case "system_trust_basic": {
+				badgeIcon.setAttribute("src", "./css/emojione/1.png");
+				badgeIcon.setAttribute("title", "Reached basic trust level");
+				break;
+			}
+			case "system_trust_intermediate": {
+				badgeIcon.setAttribute("src", "./css/emojione/2.png");
+				badgeIcon.setAttribute("title", "Reached neutral trust level");
+				break;
+			}
+			case "system_trust_known": {
+				badgeIcon.setAttribute("src", "./css/emojione/3.png");
+				badgeIcon.setAttribute("title", "Reached known trust level");
+				break;
+			}
+			case "system_trust_trusted": {
+				badgeIcon.setAttribute("src", "./css/emojione/4.png");
+				badgeIcon.setAttribute("title", "Reached trusted trust level");
+				break;
+			}
+			case "system_trust_veteran": {
+				badgeIcon.setAttribute("src", "./css/emojione/5.png");
+				badgeIcon.setAttribute("title", "Reached veteran trust level");
+				break;
+			}
+			case "system_trust_legend": {
+				badgeIcon.setAttribute("src", "./css/emojione/6.png");
+				badgeIcon.setAttribute("title", "Reached legend trust level");
+				break;
+			}
+			case "system_troll": {
+				badgeIcon.setAttribute("src", "./css/emojione/troll.png");
+				badgeIcon.setAttribute("title", "Been reported a lot");
+				break;
+			}
+			case "system_probable_troll": {
+				badgeIcon.setAttribute("src", "./css/emojione/probably_troll.png");
+				badgeIcon.setAttribute("title", "Been reported a few times");
+				break;
+			}
+			default:
+				continue;
+		}
+		badgesArea.appendChild(badgeIcon)
+	}
+	
+	setTimeout(() => {
+		trustInfoContainer.style.opacity = "1";
+	}, 1000);
+	centerChild.appendChild(badges);
 	center.appendChild(centerChild);
 	content.appendChild(center);
 }
@@ -586,7 +752,7 @@ function buildFriendsPage(content) {
 	}
 	api.getFriends((data) => {
 		if (data.error !== undefined) {
-			sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+			sendNotification("An error occurred, press F12 to see full details: " + data.error.message, "alert-error");
 			console.log("ERROR REPORT:");
 			console.log(data)
 		}
@@ -595,18 +761,18 @@ function buildFriendsPage(content) {
 		const worldsToLoad = [];
 		for (let i = 0; i < data.length; i++) {
 			const friend = data[i];
-
+			
 			const friendEntry = createElement("div", "friend-entry");
-
+			
 			const friendNameContainer = createElement("div", "friend-name-container");
 			const friendName = createElement("a", "friend-name", friend.displayName);
 			friendNameContainer.appendChild(friendName);
-
+			
 			const friendImageContainer = createElement("div", "friend-image-container");
 			const friendImage = createElement("img", "friend-image");
 			friendImage.setAttribute("src", friend.currentAvatarThumbnailImageUrl);
 			friendImageContainer.appendChild(friendImage);
-
+			
 			const friendWorldContainer = createElement("div", "friend-world-container");
 			const friendWorldName = createElement("a", "friend-world", "Loading world...");
 			const friendWorldInstance = createElement("a", "friend-world-instance", "Unknown");
@@ -665,7 +831,7 @@ function buildFriendsPage(content) {
 						}
 						api.getWorldMetadata(gs[1], gs[2], !canLoadMeta, (data) => {
 							if (data.error !== undefined) {
-								sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+								sendNotification("An error occurred, press F12 to see full details: " + data.error.message, "alert-error");
 								console.log("ERROR REPORT:");
 								console.log(data)
 							}
@@ -772,7 +938,7 @@ function buildModerationsPage(content) {
 	const cardContainer = createElement("div", "card-container");
 	api.modGetAgainstMe((data) => {
 		if (data.error !== undefined) {
-			sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+			sendNotification("An error occurred, press F12 to see full details: " + data.error.message, "alert-error");
 			console.log("ERROR REPORT:");
 			console.log(data)
 		}
@@ -853,7 +1019,7 @@ function buildModerationsPage(content) {
 	mineContainer.appendChild(mineList);
 	api.modGetMine((data) => {
 		if (data.error !== undefined) {
-			sendNotification("An error occurred, press F12 to see full details: " + data.error, "alert-error");
+			sendNotification("An error occurred, press F12 to see full details: " + data.error.message, "alert-error");
 			console.log("ERROR REPORT:");
 			console.log(data)
 		}

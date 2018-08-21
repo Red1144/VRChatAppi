@@ -66,7 +66,6 @@ html, body {
 
 
 .center-child {
-	box-shadow: none;
 }
 
 .profile-picture-img {
@@ -76,6 +75,7 @@ html, body {
 .welcome {
 	background-color: #2B2B2B;
 	border: 1px solid black;
+	box-shadow: none;
 }
 
 .welcome-text-container {
@@ -302,24 +302,9 @@ html, body {
 	border: 1px solid black;
 }
 
-/* The container */
 .setting-container {
 	color: #A9B7C6;
 }
-
-/* Hide the browser's default checkbox */
-
-/* Create a custom checkbox */
-
-/* On mouse-over, add a grey background color */
-
-/* When the checkbox is checked, add a blue background */
-
-/* Create the checkmark/indicator (hidden when not checked) */
-
-/* Show the checkmark when checked */
-
-/* Style the checkmark/indicator */
 
 .setting-container-number {
 	color: #A9B7C6;
@@ -371,4 +356,45 @@ input[type=number]::-webkit-inner-spin-button {
 
 .avatar-image-help {
 	color: #808080;
+}
+
+.badges-window {
+	background-color: #2B2B2B;
+	box-shadow: none;
+	border: 1px black solid;
+	color: #A9B7C6;
+}
+
+.badges-header-container {
+	color: #CB772F;
+}
+
+.trust-meter-bg {
+	border: 1px solid black;
+	background-color: #2B2B2B;
+	width: calc(100% - 18px);
+}
+
+.trust-meter-shrinker {
+	background-color: #323232;
+}
+
+.trust-image {
+	filter: none;
+}
+
+.trust-meter {
+	background-image: linear-gradient(to right, #EF3B3A, gold, gold, #619647,  #619647,  #619647, greenyellow);
+	width: 100%;
+	height: 100%;
+}
+
+.badges-container {
+	box-shadow: none;
+	border: 1px solid black;
+	background-color: #323232;
+}
+
+.badge {
+	filter: none;
 }

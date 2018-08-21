@@ -39,6 +39,12 @@ let authToken = '';
 let loginInfo = {};
 
 /**
+ * Cached user tags
+ * @type {{}}
+ */
+let tags = {};
+
+/**
  * Cached world information
  * @type {Array}
  */
@@ -69,7 +75,7 @@ let userSettings = {
  * if this is set to false in production I fucked up.
  * @type {boolean}
  */
-const enableTokenReint = true;
+const enableTokenReint = false;
 
 /**
  * Clears the world cache
@@ -94,6 +100,7 @@ function saveSession(callback) {
 	crypted += cipher.final('hex');
 	storage.set("session", {
 		encrypted: Buffer.from(crypted).toString('base64'),
+		tags: tags
 	}, (error) => {
 		if (error) {
 			console.log("Error: " + error);
@@ -148,6 +155,7 @@ function loadSession(callback) {
 				let dec = decipher.update(encrypted, 'hex', 'utf8');
 				dec += decipher.final('utf8');
 				const i = JSON.parse(dec);
+				tags = data.tags;
 				if (!enableTokenReint) {
 					// if we're allowed to use cached login tokens
 					authToken = i.authToken;
@@ -251,6 +259,7 @@ function login(name, password, callback) {
 			callback(data.error.message);
 		} else {
 			authToken = getAuthKey(headers).auth;
+			tags = data.tags;
 			loginInfo = {
 				username: data.username,
 				displayName: data.displayName,
@@ -599,6 +608,14 @@ function getLoginInfo() {
 }
 
 /**
+ * Getter for {@see tags}
+ * @return {{}}
+ */
+function getUserTags() {
+	return tags;
+}
+
+/**
  * Get a request from the cache
  * @param ident         The requests identification
  * @returns {*}         The cached request
@@ -705,5 +722,9 @@ module.exports = {
 
 	saveAvatar: (id, settings, callback) => {
 		saveAvatar(id, settings, callback);
+	},
+	
+	getUserTags: () => {
+		return getUserTags();
 	}
 };
