@@ -215,6 +215,7 @@ textarea:focus, input:focus {
 .profile-picture {
 	padding: 8px;
 	width: 256px;
+	height: 192px;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -241,14 +242,13 @@ textarea:focus, input:focus {
 .friends-container {
 	padding: 16px;
 	display: flex;
-	grid-gap: 10px;
 	flex-flow: row wrap;
 	justify-content: center;
 	margin: 16px;
 }
 
 .friend-entry {
-	margin: 16px;
+	margin: 6px;
 	background-color: white;
 	padding: 8px;
 	box-shadow: 10px 10px 32px 0 rgba(0, 0, 0, 0.75);
@@ -258,6 +258,7 @@ textarea:focus, input:focus {
 	box-shadow: 2px 2px 16px 0 rgba(0, 0, 0, 0.5);
 	padding: 4px;
 	width: 247px;
+	height: 185px;
 }
 
 .friend-world-container {
@@ -327,6 +328,16 @@ textarea:focus, input:focus {
 	font-size: 32px;
 	text-align: center;
 	padding-bottom: 4px;
+	max-width: 256px;
+	overflow: hidden;
+	display: flex;
+}
+
+.friend-name-container a {
+	width: 256px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
 }
 
 /* Moderation start */
@@ -457,7 +468,7 @@ textarea:focus, input:focus {
 }
 
 .avatar-entry {
-	margin: 16px;
+	margin: 6px;
 	background-color: white;
 	padding: 8px;
 	box-shadow: 10px 10px 32px 0 rgba(0, 0, 0, 0.75);

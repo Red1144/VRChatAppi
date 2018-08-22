@@ -134,7 +134,9 @@ function setPopup(content) {
 
 function closePopup() {
 	//document.body.style.overflow = "auto";
-	popupContainer.style.zIndex = "-1";
+	setTimeout(() => {
+		popupContainer.style.zIndex = "-1";
+	}, 500);
 	popupContainer.style.opacity = "0";
 	popup.style.marginTop = "-500px";
 	popup.innerHTML = '';
@@ -599,13 +601,17 @@ function buildMePage(content) {
 	badges.appendChild(badgesContainer);
 	let trust_level = 0;
 	// Just... don't look please
-	trust_level =
-		tags.indexOf("system_trust_legend") > -1 ? 6 :
-			trust_level = tags.indexOf("system_trust_veteran") > -1 ? 5 :
-				trust_level = tags.indexOf("system_trust_trusted") > -1 ? 4 :
-					trust_level = tags.indexOf("system_trust_known") > -1 ? 3 :
-						trust_level = tags.indexOf("system_trust_intermediate") > -1 ? 2 :
-							trust_level = tags.indexOf("system_trust_basic") > -1 ? 1 : 0;
+	if (tags === undefined) {
+		trust_level = -1;
+	} else {
+		trust_level =
+			tags.indexOf("system_trust_legend") > -1 ? 6 :
+				trust_level = tags.indexOf("system_trust_veteran") > -1 ? 5 :
+					trust_level = tags.indexOf("system_trust_trusted") > -1 ? 4 :
+						trust_level = tags.indexOf("system_trust_known") > -1 ? 3 :
+							trust_level = tags.indexOf("system_trust_intermediate") > -1 ? 2 :
+								trust_level = tags.indexOf("system_trust_basic") > -1 ? 1 : 0;
+	}
 	
 	// Animation workaround
 	setTimeout(() => {
@@ -628,7 +634,7 @@ function buildMePage(content) {
 				trustMeterShrinker.style.width = "68%";
 				trustInfo.innerText = "Neutral";
 				trustImage.setAttribute("src", "./css/emojione/2.png");
-				trustTooltip.innerText = "Third lowest trust rating; you've probably just started to upload content to the game and made a few friends. Good luck!";
+				trustTooltip.innerText = "Third lowest trust rating; you've probably just started to upload content to the game and made a few friends.";
 				break;
 			}
 			case 3: {
@@ -659,77 +665,91 @@ function buildMePage(content) {
 				trustTooltip.innerText = "Best possible trust ranking; you're an outstanding member of the community. Keep at it!";
 				break;
 			}
+			case -1: {
+				trustMeterShrinker.style.width = "0";
+				trustInfo.innerText = "An error occured";
+				trustImage.setAttribute("src", "./css/emojione/warning.png");
+				trustTooltip.innerText = "Unable to get your trust level, relogging might fix this issue.";
+				break;
+			}
 		}
 		trustInfo.appendChild(trustTooltip);
 	}, 0);
 	
-	for (let i = 0; i < tags.length; i++) {
-		const badgeIcon = createElement("img", "badge");
-		switch (tags[i]) {
-			case "system_feedback_access": {
-				badgeIcon.setAttribute("src", "./css/emojione/feedback1.png");
-				badgeIcon.setAttribute("title", "Can send feedback");
-				break;
+	if (tags !== undefined) {
+		for (let i = 0; i < tags.length; i++) {
+			const badgeIcon = createElement("img", "badge");
+			switch (tags[i]) {
+				case "system_feedback_access": {
+					badgeIcon.setAttribute("src", "./css/emojione/feedback1.png");
+					badgeIcon.setAttribute("title", "Can send feedback");
+					break;
+				}
+				case "system_avatar_access": {
+					badgeIcon.setAttribute("src", "./css/emojione/content_rights.png");
+					badgeIcon.setAttribute("title", "Can upload avatars");
+					break;
+				}
+				case "system_world_access": {
+					badgeIcon.setAttribute("src", "./css/emojione/map.png");
+					badgeIcon.setAttribute("title", "Can upload worlds");
+					break;
+				}
+				case "system_legend": {
+					badgeIcon.setAttribute("src", "./css/emojione/legend.png");
+					badgeIcon.setAttribute("title", "Played a lot");
+					break;
+				}
+				case "system_trust_basic": {
+					badgeIcon.setAttribute("src", "./css/emojione/1.png");
+					badgeIcon.setAttribute("title", "Reached basic trust level");
+					break;
+				}
+				case "system_trust_intermediate": {
+					badgeIcon.setAttribute("src", "./css/emojione/2.png");
+					badgeIcon.setAttribute("title", "Reached neutral trust level");
+					break;
+				}
+				case "system_trust_known": {
+					badgeIcon.setAttribute("src", "./css/emojione/3.png");
+					badgeIcon.setAttribute("title", "Reached known trust level");
+					break;
+				}
+				case "system_trust_trusted": {
+					badgeIcon.setAttribute("src", "./css/emojione/4.png");
+					badgeIcon.setAttribute("title", "Reached trusted trust level");
+					break;
+				}
+				case "system_trust_veteran": {
+					badgeIcon.setAttribute("src", "./css/emojione/5.png");
+					badgeIcon.setAttribute("title", "Reached veteran trust level");
+					break;
+				}
+				case "system_trust_legend": {
+					badgeIcon.setAttribute("src", "./css/emojione/6.png");
+					badgeIcon.setAttribute("title", "Reached legend trust level");
+					break;
+				}
+				case "system_troll": {
+					badgeIcon.setAttribute("src", "./css/emojione/troll.png");
+					badgeIcon.setAttribute("title", "Been reported a lot");
+					break;
+				}
+				case "system_probable_troll": {
+					badgeIcon.setAttribute("src", "./css/emojione/probably_troll.png");
+					badgeIcon.setAttribute("title", "Been reported a few times");
+					break;
+				}
+				default:
+					continue;
 			}
-			case "system_avatar_access": {
-				badgeIcon.setAttribute("src", "./css/emojione/content_rights.png");
-				badgeIcon.setAttribute("title", "Can upload avatars");
-				break;
-			}
-			case "system_world_access": {
-				badgeIcon.setAttribute("src", "./css/emojione/map.png");
-				badgeIcon.setAttribute("title", "Can upload worlds");
-				break;
-			}
-			case "system_legend": {
-				badgeIcon.setAttribute("src", "./css/emojione/legend.png");
-				badgeIcon.setAttribute("title", "Played a lot");
-				break;
-			}
-			case "system_trust_basic": {
-				badgeIcon.setAttribute("src", "./css/emojione/1.png");
-				badgeIcon.setAttribute("title", "Reached basic trust level");
-				break;
-			}
-			case "system_trust_intermediate": {
-				badgeIcon.setAttribute("src", "./css/emojione/2.png");
-				badgeIcon.setAttribute("title", "Reached neutral trust level");
-				break;
-			}
-			case "system_trust_known": {
-				badgeIcon.setAttribute("src", "./css/emojione/3.png");
-				badgeIcon.setAttribute("title", "Reached known trust level");
-				break;
-			}
-			case "system_trust_trusted": {
-				badgeIcon.setAttribute("src", "./css/emojione/4.png");
-				badgeIcon.setAttribute("title", "Reached trusted trust level");
-				break;
-			}
-			case "system_trust_veteran": {
-				badgeIcon.setAttribute("src", "./css/emojione/5.png");
-				badgeIcon.setAttribute("title", "Reached veteran trust level");
-				break;
-			}
-			case "system_trust_legend": {
-				badgeIcon.setAttribute("src", "./css/emojione/6.png");
-				badgeIcon.setAttribute("title", "Reached legend trust level");
-				break;
-			}
-			case "system_troll": {
-				badgeIcon.setAttribute("src", "./css/emojione/troll.png");
-				badgeIcon.setAttribute("title", "Been reported a lot");
-				break;
-			}
-			case "system_probable_troll": {
-				badgeIcon.setAttribute("src", "./css/emojione/probably_troll.png");
-				badgeIcon.setAttribute("title", "Been reported a few times");
-				break;
-			}
-			default:
-				continue;
+			badgesArea.appendChild(badgeIcon)
 		}
-		badgesArea.appendChild(badgeIcon)
+	} else {
+		const badgeIcon = createElement("img", "badge");
+		badgeIcon.setAttribute("src", "./css/emojione/warning.png");
+		badgeIcon.setAttribute("title", "It's broken.");
+		badgesArea.appendChild(badgeIcon);
 	}
 	
 	setTimeout(() => {

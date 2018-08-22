@@ -290,6 +290,7 @@ function getFriends(callback, cached) {
 		console.log("Error! auth token not set => {@see getFriends}");
 		return
 	}
+	
 	if (cached) {
 		callback(getCachedRequest("friends"));
 	} else {
@@ -298,8 +299,6 @@ function getFriends(callback, cached) {
 			cacheRequest("friends", data);
 		});
 	}
-
-
 }
 
 /**
@@ -508,7 +507,8 @@ function sendGETRequest(location, callback, basic) {
 		port: 443,
 		method: 'GET',
 		headers: {
-			"Content-Type": "application/json"
+			"Content-Type": "application/json",
+			"User-Agent" : "VRChatAppi (https://github.com/3e849f2e5c/VRChatAppi, v.1.1.1)"
 		}
 	};
 	options.path += location;
@@ -551,7 +551,8 @@ function sendPUTRequest(location, data, callback) {
 		method: 'PUT',
 		headers: {
 			"Content-Type": "application/json",
-			"Content-Length": Buffer.byteLength(JSON.stringify(data))
+			"Content-Length": Buffer.byteLength(JSON.stringify(data)),
+			"User-Agent" : "VRChatAppi (https://github.com/3e849f2e5c/VRChatAppi, v.1.1.1)"
 		}
 	};
 	options.path += location;
