@@ -11,7 +11,7 @@ VRChat Appi is an experimental desktop application that uses the VRChat API.
 
 Head over to the releases tab or click the link below and unzip the folder anywhere and run VRChat App.exe
 
-https://github.com/3e849f2e5c/VRChatAppi/releases/download/v1.1.1/VRApp.zip
+https://github.com/3e849f2e5c/VRChatAppi/releases/download/v1.1.2-BETA/VRApp.zip
 
 # Features
 
