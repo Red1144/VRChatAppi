@@ -1,3 +1,7 @@
+# Update 24/8/2018
+
+Seems like VRChat API has stopped providing unity packages for your own content so any content uploaded before 24/8/2018 may not be able to be downloaded with this program
+
 # VRChat Appi
 
 VRChat Appi is an experimental desktop application that uses the VRChat API.
