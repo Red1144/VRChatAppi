@@ -1,3 +1,6 @@
+# Update 22/9/2018
+VRChat has implemented their own trust system and for some reason they have stepped them down by one so if you are Veteran in  this app you're only trusted in game
+
 # Update 24/8/2018
 
 Seems like VRChat API has stopped providing unity packages for your own content so any content uploaded after 24/8/2018 may not be able to be downloaded with this program
