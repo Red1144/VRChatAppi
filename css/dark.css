@@ -99,6 +99,12 @@ html, body {
 
 /* Friends page start */
 
+.container-group-name-container {
+	color: #CB772F;
+	box-shadow: none;
+	background-color: #2B2B2B;
+	border: 1px solid black;
+}
 
 .friend-entry {
 	background-color: #2B2B2B;

@@ -777,7 +777,68 @@ function buildFriendsPage(content) {
 			console.log(data)
 		}
 		content.innerHTML = '';
-		const container = createElement("div", "friends-container");
+		
+		const allContainer = createElement("div", "friends-container");
+		const container = createElement("div", "container-group");
+		
+		let groups = {
+			group1: {
+				name: api.getLoginInfo().friendGroups[0],
+				users: []
+			},
+			group2: {
+				name: api.getLoginInfo().friendGroups[1],
+				users: []
+			},
+			group3: {
+				name: api.getLoginInfo().friendGroups[2],
+				users: []
+			}
+		};
+		
+		console.log(api.getLoginInfo());
+		
+		const container1 = createElement("div", "container-group");
+		const container1Friends = createElement("div", "container-group-friends");
+		const group1NameContainer = createElement("div", "container-group-name-container");
+		const group1Name = createElement("a", "container-group-name", groups.group1.name);
+		group1NameContainer.appendChild(group1Name);
+		container1.appendChild(group1NameContainer);
+		container1.appendChild(container1Friends);
+		
+		const container2 = createElement("div", "container-group");
+		const container2Friends = createElement("div", "container-group-friends");
+		const group2NameContainer = createElement("div", "container-group-name-container");
+		const group2Name = createElement("a", "container-group-name", groups.group2.name);
+		group2NameContainer.appendChild(group2Name);
+		container2.appendChild(group2NameContainer);
+		container2.appendChild(container2Friends);
+		
+		const container3 = createElement("div", "container-group");
+		const container3Friends = createElement("div", "container-group-friends");
+		const group3NameContainer = createElement("div", "container-group-name-container");
+		const group3Name = createElement("a", "container-group-name", groups.group3.name);
+		group3NameContainer.appendChild(group3Name);
+		container3.appendChild(group3NameContainer);
+		container3.appendChild(container3Friends);
+		
+		allContainer.appendChild(container);
+		
+		const loadButton = createElement("div", "group-load-button");
+		const loadButtonImg = createElement("img", "group-load-img");
+		const loadButtonTooltip = createElement("span", "load-tooltip", "Load friend groups");
+		loadButtonImg.setAttribute("src", "./css/flaticon/png/refresh.png");
+		loadButton.appendChild(loadButtonImg);
+		loadButton.appendChild(loadButtonTooltip);
+		container.appendChild(loadButton);
+		
+		loadButton.addEventListener('click', () => {
+			api.getFavorites((data) => {
+				api.saveFavorites(data);
+				sendNotification("Friend groups loaded successfully, refresh the page for the changes to take effect.", "alert-ok");
+			});
+		});
+		
 		const worldsToLoad = [];
 		const toSort = [];
 		for (let i = 0; i < data.length; i++) {
@@ -799,16 +860,24 @@ function buildFriendsPage(content) {
 			const friendActivityStatus = createElement("span", "status-text", friend.statusDescription);
 			friendActivityOut.appendChild(friendActivityIn);
 			friendActivityOut.appendChild(friendActivityStatus);
+			
 			switch (friend.status) {
-				case "active": friendActivityOut.setAttribute("class", "circle-out circle-active"); break;
-				case "join me": friendActivityOut.setAttribute("class", "circle-out circle-join"); break;
-				case "busy": friendActivityOut.setAttribute("class", "circle-out circle-busy"); break;
-				default: console.log(friend.status);
+				case "active":
+					friendActivityOut.setAttribute("class", "circle-out circle-active");
+					break;
+				case "join me":
+					friendActivityOut.setAttribute("class", "circle-out circle-join");
+					break;
+				case "busy":
+					friendActivityOut.setAttribute("class", "circle-out circle-busy");
+					break;
+				default:
+					console.log(friend.status);
 			}
 			friendImageContainer.appendChild(friendActivityOut);
 			
 			const friendWorldContainer = createElement("div", "friend-world-container");
-			const friendWorldName = createElement("a", "friend-world", "Loading world...");
+			const friendWorldName = createElement("a", "friend-world", "Error!");
 			const friendWorldInstance = createElement("a", "friend-world-instance", "Unknown");
 			const friendWorldMode = createElement("a", "friend-world-mode", "Unknown");
 			friendWorldContainer.appendChild(friendWorldName);
@@ -820,169 +889,176 @@ function buildFriendsPage(content) {
 					sendNotification("Private worlds cannot be viewed due to API limitations.", "alert-error");
 				});
 			} else {
-				const regex = /(.+?):(.+?)($|~(.+?)\((.+?)\))/g;
-				const groups = regex.exec(world);
-				const id = groups[1];
-				const instance = groups[2];
-				const mode = groups[4];
-				let clearMode = '';
-				if (mode !== undefined) {
-					switch (mode) {
-						case 'hidden' :
-							clearMode = "Friends+";
-							break;
-						case 'friends':
-							clearMode = "Friends Only";
-							break;
-						default:
-							clearMode = "Unknown";
+				try {
+					const regex = /(.+?):(.+?)($|~(.+?)\((.+?)\))/g;
+					const groups = regex.exec(world);
+					const id = groups[1];
+					const instance = groups[2];
+					const mode = groups[4];
+					let clearMode = '';
+					if (mode !== undefined) {
+						switch (mode) {
+							case 'hidden' :
+								clearMode = "Friends+";
+								break;
+							case 'friends':
+								clearMode = "Friends Only";
+								break;
+							default:
+								clearMode = "Unknown";
+						}
+						friendWorldName.addEventListener('click', (e) => {
+							const regex1 = /(.+?):(.+)$/g;
+							const gs = regex1.exec(world);
+							if (e.shiftKey) {
+								if (canSendRequests("world")) {
+									startLoading();
+									const key = gs[1];
+									const load = worldsToLoad[key];
+									api.getWorld(key, false, (data) => {
+										for (let i = 0; i < load.length; i++) {
+											load[i].innerText = data.name;
+											load[i].setAttribute("title", data.name);
+											load[i].setAttribute("class", "friend-world")
+										}
+										stopLoading();
+									});
+								} else {
+									sendNotification("You cannot load a world for another " + whenNextRequest("world") + ".", "alert-error")
+								}
+								return;
+							}
+							const canLoadMeta = canSendRequests(gs[2]);
+							if (!canLoadMeta) {
+								sendNotification("You are seeing an older version of this world. Try again in " + whenNextRequest(gs[2]) + " for an up to date version.", "alert-ok")
+							}
+							api.getWorldMetadata(gs[1], gs[2], !canLoadMeta, (data) => {
+								if (data.error !== undefined) {
+									sendNotification("An error occurred, press F12 to see full details: " + data.error.message, "alert-error");
+									console.log("ERROR REPORT:");
+									console.log(data)
+								}
+								const listUsers = [];
+								if (data === false) {
+									stopLoading();
+									return;
+								}
+								for (let j = 0; j < data.users.length; j++) {
+									const user = data.users[j];
+									listUsers.push(user.displayName);
+								}
+								const popup = createElement("div", "popup-container-inner");
+								const popupInfoContainer = createElement("div", "popup-info-container");
+								const popupInfo = createElement("a", "popup-info", "Instance #" + instance);
+								popupInfoContainer.appendChild(popupInfo);
+								popup.appendChild(popupInfoContainer);
+								const userListContainer = createElement("div", "user-list-container");
+								for (let k = 0; k < listUsers.length; k++) {
+									const lUser = listUsers[k];
+									userListContainer.appendChild(createElement("a", "user-list-entry", lUser))
+								}
+								const saveBtnContainer = createElement("div", "edit-container save-container");
+								const saveBtn = createElement("div", "edit-button save-button");
+								const saveBtnText = createElement("a", "edit-text", "Join");
+								saveBtn.appendChild(saveBtnText);
+								saveBtnContainer.appendChild(saveBtn);
+								saveBtn.addEventListener('click', () => {
+									document.location = 'vrchat://launch?id=' + friend.location;
+								});
+								popup.appendChild(userListContainer);
+								popup.appendChild(saveBtnContainer);
+								setPopup(popup);
+								stopLoading();
+							})
+						});
+					} else {
+						clearMode = "Public";
+						friendWorldName.addEventListener('click', (e) => {
+							const regex1 = /(.+?):(.+)$/g;
+							const gs = regex1.exec(world);
+							if (e.shiftKey) {
+								if (canSendRequests("world")) {
+									startLoading();
+									const key = gs[1];
+									const load = worldsToLoad[key];
+									api.getWorld(key, false, (data) => {
+										for (let i = 0; i < load.length; i++) {
+											load[i].innerText = data.name;
+											load[i].setAttribute("title", data.name);
+											load[i].setAttribute("class", "friend-world")
+										}
+										stopLoading();
+									});
+								} else {
+									sendNotification("You cannot load a world for another " + whenNextRequest("world") + ".", "alert-error")
+								}
+								return;
+							}
+							const canLoadMeta = canSendRequests(gs[2]);
+							if (!canLoadMeta) {
+								sendNotification("You are seeing an older version of this world. Try again in " + whenNextRequest(gs[2]) + " for an up to date version.", "alert-ok")
+							}
+							api.getWorldMetadata(gs[1], gs[2], !canLoadMeta, (data) => {
+								if (data.error !== undefined) {
+									sendNotification("An error occurred, press F12 to see full details: " + data.error.message, "alert-error");
+									console.log("ERROR REPORT:");
+									console.log(data)
+								}
+								const listUsers = [];
+								if (data === false) {
+									stopLoading();
+									return;
+								}
+								for (let j = 0; j < data.users.length; j++) {
+									const user = data.users[j];
+									listUsers.push(user.displayName);
+								}
+								const popup = createElement("div", "popup-container-inner");
+								const popupInfoContainer = createElement("div", "popup-info-container");
+								const popupInfo = createElement("a", "popup-info", "Instance #" + instance);
+								popupInfoContainer.appendChild(popupInfo);
+								popup.appendChild(popupInfoContainer);
+								const userListContainer = createElement("div", "user-list-container");
+								for (let k = 0; k < listUsers.length; k++) {
+									const lUser = listUsers[k];
+									userListContainer.appendChild(createElement("a", "user-list-entry", lUser))
+								}
+								const saveBtnContainer = createElement("div", "edit-container save-container");
+								const saveBtn = createElement("div", "edit-button save-button");
+								const saveBtnText = createElement("a", "edit-text", "Join");
+								saveBtn.appendChild(saveBtnText);
+								saveBtnContainer.appendChild(saveBtn);
+								saveBtn.addEventListener('click', () => {
+									document.location = 'vrchat://launch?id=' + friend.location;
+								});
+								popup.appendChild(userListContainer);
+								popup.appendChild(saveBtnContainer);
+								setPopup(popup);
+								stopLoading();
+							})
+						});
 					}
-					friendWorldName.addEventListener('click', (e) => {
-						const regex1 = /(.+?):(.+)$/g;
-						const gs = regex1.exec(world);
-						if (e.shiftKey) {
-							if (canSendRequests("world")) {
-								startLoading();
-								const key = gs[1];
-								const load = worldsToLoad[key];
-								api.getWorld(key, false, (data) => {
-									for (let i = 0; i < load.length; i++) {
-										load[i].innerText = data.name;
-										load[i].setAttribute("title", data.name);
-										load[i].setAttribute("class", "friend-world")
-									}
-									stopLoading();
-								});
-							} else {
-								sendNotification("You cannot load a world for another " + whenNextRequest("world") + ".", "alert-error")
-							}
-							return;
-						}
-						const canLoadMeta = canSendRequests(gs[2]);
-						if (!canLoadMeta) {
-							sendNotification("You are seeing an older version of this world. Try again in " + whenNextRequest(gs[2]) + " for an up to date version.", "alert-ok")
-						}
-						api.getWorldMetadata(gs[1], gs[2], !canLoadMeta, (data) => {
-							if (data.error !== undefined) {
-								sendNotification("An error occurred, press F12 to see full details: " + data.error.message, "alert-error");
-								console.log("ERROR REPORT:");
-								console.log(data)
-							}
-							const listUsers = [];
-							if (data === false) {
-								stopLoading();
-								return;
-							}
-							for (let j = 0; j < data.users.length; j++) {
-								const user = data.users[j];
-								listUsers.push(user.displayName);
-							}
-							const popup = createElement("div", "popup-container-inner");
-							const popupInfoContainer = createElement("div", "popup-info-container");
-							const popupInfo = createElement("a", "popup-info", "Instance #" + instance);
-							popupInfoContainer.appendChild(popupInfo);
-							popup.appendChild(popupInfoContainer);
-							const userListContainer = createElement("div", "user-list-container");
-							for (let k = 0; k < listUsers.length; k++) {
-								const lUser = listUsers[k];
-								userListContainer.appendChild(createElement("a", "user-list-entry", lUser))
-							}
-							const saveBtnContainer = createElement("div", "edit-container save-container");
-							const saveBtn = createElement("div", "edit-button save-button");
-							const saveBtnText = createElement("a", "edit-text", "Join");
-							saveBtn.appendChild(saveBtnText);
-							saveBtnContainer.appendChild(saveBtn);
-							saveBtn.addEventListener('click', () => {
-								document.location = 'vrchat://launch?id=' + friend.location;
-							});
-							popup.appendChild(userListContainer);
-							popup.appendChild(saveBtnContainer);
-							setPopup(popup);
-							stopLoading();
-						})
-					});
-				} else {
-					clearMode = "Public";
-					friendWorldName.addEventListener('click', (e) => {
-						const regex1 = /(.+?):(.+)$/g;
-						const gs = regex1.exec(world);
-						if (e.shiftKey) {
-							if (canSendRequests("world")) {
-								startLoading();
-								const key = gs[1];
-								const load = worldsToLoad[key];
-								api.getWorld(key, false, (data) => {
-									for (let i = 0; i < load.length; i++) {
-										load[i].innerText = data.name;
-										load[i].setAttribute("title", data.name);
-										load[i].setAttribute("class", "friend-world")
-									}
-									stopLoading();
-								});
-							} else {
-								sendNotification("You cannot load a world for another " + whenNextRequest("world") + ".", "alert-error")
-							}
-							return;
-						}
-						const canLoadMeta = canSendRequests(gs[2]);
-						if (!canLoadMeta) {
-							sendNotification("You are seeing an older version of this world. Try again in " + whenNextRequest(gs[2]) + " for an up to date version.", "alert-ok")
-						}
-						api.getWorldMetadata(gs[1], gs[2], !canLoadMeta, (data) => {
-							if (data.error !== undefined) {
-								sendNotification("An error occurred, press F12 to see full details: " + data.error.message, "alert-error");
-								console.log("ERROR REPORT:");
-								console.log(data)
-							}
-							const listUsers = [];
-							if (data === false) {
-								stopLoading();
-								return;
-							}
-							for (let j = 0; j < data.users.length; j++) {
-								const user = data.users[j];
-								listUsers.push(user.displayName);
-							}
-							const popup = createElement("div", "popup-container-inner");
-							const popupInfoContainer = createElement("div", "popup-info-container");
-							const popupInfo = createElement("a", "popup-info", "Instance #" + instance);
-							popupInfoContainer.appendChild(popupInfo);
-							popup.appendChild(popupInfoContainer);
-							const userListContainer = createElement("div", "user-list-container");
-							for (let k = 0; k < listUsers.length; k++) {
-								const lUser = listUsers[k];
-								userListContainer.appendChild(createElement("a", "user-list-entry", lUser))
-							}
-							const saveBtnContainer = createElement("div", "edit-container save-container");
-							const saveBtn = createElement("div", "edit-button save-button");
-							const saveBtnText = createElement("a", "edit-text", "Join");
-							saveBtn.appendChild(saveBtnText);
-							saveBtnContainer.appendChild(saveBtn);
-							saveBtn.addEventListener('click', () => {
-								document.location = 'vrchat://launch?id=' + friend.location;
-							});
-							popup.appendChild(userListContainer);
-							popup.appendChild(saveBtnContainer);
-							setPopup(popup);
-							stopLoading();
-						})
-					});
+					friendWorldMode.innerText = clearMode;
+					friendWorldInstance.innerText = instance;
+					friendWorldContainer.appendChild(friendWorldInstance);
+					friendWorldContainer.appendChild(friendWorldMode);
+					if (worldsToLoad[id] === undefined) {
+						worldsToLoad[id] = [];
+					}
+					worldsToLoad[id].push(friendWorldName);
+				} catch (e) {
+					console.log(e);
+					sendNotification("The program encountered an error but is attempting to continue. Stability is not guaranteed.", "alert-error")
 				}
-				friendWorldMode.innerText = clearMode;
-				friendWorldInstance.innerText = instance;
-				friendWorldContainer.appendChild(friendWorldInstance);
-				friendWorldContainer.appendChild(friendWorldMode);
-				if (worldsToLoad[id] === undefined) {
-					worldsToLoad[id] = [];
-				}
-				worldsToLoad[id].push(friendWorldName);
+				
 			}
 			friendEntry.appendChild(friendNameContainer);
 			friendEntry.appendChild(friendImageContainer);
 			friendEntry.appendChild(friendWorldContainer);
 			toSort.push({
 				entry: friendEntry,
-				location: friend.location
+				location: friend.location,
+				id: friend.id
 			});
 		}
 		for (let key in worldsToLoad) {
@@ -1001,19 +1077,58 @@ function buildFriendsPage(content) {
 				});
 			}
 		}
-		toSort.sort(compare);
-		for (let i = 0; i < toSort.length; i++) {
-			container.appendChild(toSort[i].entry);
-		}
+		
+		api.loadFavorites((data) => {
+			if (data === null) {
+				toSort.sort(compare);
+				for (let i = 0; i < toSort.length; i++) {
+					container.appendChild(toSort[i].entry);
+				}
+				return;
+			}
+			for (let i = 0; i < data.length; i++) {
+				const favorite = data[i];
+				if (favorite.type === "friend") {
+					if (favorite.tags.indexOf("group_0") !== -1) {
+						groups.group1.users.push(favorite.favoriteId);
+					} else if (favorite.tags.indexOf("group_1") !== -1) {
+						groups.group2.users.push(favorite.favoriteId);
+					} else if (favorite.tags.indexOf("group_2") !== -1) {
+						groups.group3.users.push(favorite.favoriteId);
+					}
+				}
+			}
+			toSort.sort(compare);
+			for (let i = 0; i < toSort.length; i++) {
+				if (groups.group1.users.indexOf(toSort[i].id) !== -1) {
+					container1Friends.appendChild(toSort[i].entry);
+					if (!allContainer.contains(container1)) {
+						allContainer.appendChild(container1);
+					}
+				} else if (groups.group2.users.indexOf(toSort[i].id) !== -1) {
+					container2Friends.appendChild(toSort[i].entry);
+					if (!allContainer.contains(container2)) {
+						allContainer.appendChild(container2);
+					}
+				} else if (groups.group3.users.indexOf(toSort[i].id) !== -1) {
+					container3Friends.appendChild(toSort[i].entry);
+					if (!allContainer.contains(container3)) {
+						allContainer.appendChild(container3);
+					}
+				} else {
+					container.appendChild(toSort[i].entry);
+				}
+			}
+		});
 		stopLoading();
-		content.appendChild(container)
+		content.appendChild(allContainer)
 	}, !canSend)
 }
 
 /**
  * Compare function for our friends
  */
-function compare(a,b) {
+function compare(a, b) {
 	if (a.location > b.location)
 		return -1;
 	if (a.location < b.location)

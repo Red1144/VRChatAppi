@@ -237,6 +237,36 @@ textarea:focus, input:focus {
 
 /* Friends page start */
 
+.group-load-button {
+	cursor: pointer;
+	position: absolute;
+	right: 6px;
+	top: 6px;
+}
+
+.group-load-img {
+	width: 40px;
+}
+
+.group-load-button .load-tooltip {
+	visibility: hidden;
+	width: 120px;
+	background-color: black;
+	color: #fff;
+	text-align: center;
+	padding: 5px 0;
+	border-radius: 6px;
+
+	position: absolute;
+	z-index: 1;
+	top: -3px;
+	right: 110%;
+}
+
+.group-load-button:hover .load-tooltip {
+	visibility: visible;
+}
+
 .circle-out .circle {
 	position: relative;
 	left: 3px;
@@ -303,11 +333,25 @@ textarea:focus, input:focus {
 
 
 .friends-container {
+
+}
+
+.container-group {
 	padding: 16px;
 	display: flex;
 	flex-flow: row wrap;
 	justify-content: center;
 	margin: 16px;
+}
+
+.container-group-name-container {
+	font-size: 32px;
+	background-color: white;
+	position: absolute;
+	margin-top: -42px;
+	padding-left: 8px;
+	padding-right: 8px;
+	box-shadow: 10px 10px 32px 0 rgba(0, 0, 0, 0.5);
 }
 
 .friend-entry {
