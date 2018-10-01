@@ -119,7 +119,7 @@ html, body {
 
 .popup-info-container {
 	text-align: center;
-	padding: 16px;
+	padding: 8px;
 	font-size: 32px;
 }
 
@@ -155,10 +155,8 @@ textarea:focus, input:focus {
 	align-items: center;
 	overflow-y: scroll;
 	overflow-x: hidden;
-	margin-left: 32px;
-	margin-right: 32px;
-	height: 256px;
-	margin-top: 16px;
+	height: 262px;
+	margin: 0px 16px 78px;
 	font-size: 24px;
 	box-shadow: 10px 10px 32px 0 rgba(0, 0, 0, 0.75);
 	background-color: #828282;
@@ -239,6 +237,71 @@ textarea:focus, input:focus {
 
 /* Friends page start */
 
+.circle-out .circle {
+	position: relative;
+	left: 3px;
+	top: 3px;
+	background-color: rgba(0,0,0,0.15);
+	width: 20px;
+	height: 20px;
+	border-radius: 50%
+}
+
+.circle-out {
+	display: inline-block;
+	position: absolute;
+	width: 26px;
+	height: 26px;
+	float: right;
+	margin-left: 231px;
+	margin-top: 173px;
+	border-radius: 50%;
+	border: 4px solid black;
+}
+
+.circle-active {
+	background-color: rgb(0,120,0);
+}
+
+.circle-join {
+	background-color: rgb(0,120,180);
+}
+
+.circle-busy {
+	background-color: rgb(120,0,0);
+}
+
+.circle-out .status-text {
+	visibility: hidden;
+	width: 120px;
+	background-color: black;
+	color: #fff;
+	text-align: center;
+	padding: 5px 5px;
+	border-radius: 6px;
+	position: absolute;
+	z-index: 1;
+	left: 50%;
+	margin-left: -64px;
+	bottom: 100%;
+	margin-bottom: 8px;
+}
+
+.circle-out .status-text::after {
+	content: " ";
+	position: absolute;
+	top: 100%; /* At the bottom of the tooltip */
+	left: 50%;
+	margin-left: -5px;
+	border: 5px solid transparent;
+	border-top-color: black;
+}
+
+.circle-out:hover .status-text {
+	visibility: visible;
+}
+
+
 .friends-container {
 	padding: 16px;
 	display: flex;
@@ -272,6 +335,10 @@ textarea:focus, input:focus {
 	font-size: 24px;
 	cursor: pointer;
 	transition: color 0.3s;
+}
+
+.friend-image-container {
+	display: flex;
 }
 
 .world-load {
