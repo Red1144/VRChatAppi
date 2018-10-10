@@ -104,6 +104,7 @@ Configure some aspects of the program or clean the world cache in case some worl
 ![Settings](https://i.imgur.com/5ZyVK5M.png "Settings")
 
 # Known bugs
+- Friend group entries are stacked vertically
 - Having the program idle for extended periods of time will give you invalid credentials error. This can be fixed by logging out and logging back in or restarting the program.
 - Error handling is nonexistent so if a page appears completely blank or the loading indicator is stuck it means something went wrong. Relogging may or may not fix the issue.
 
