@@ -1,9 +1,5 @@
-# Update 22/9/2018
-VRChat has implemented their own trust system and for some reason they have stepped them down by one so if you are Veteran in  this app you're only trusted in game
-
-# Update 24/8/2018
-
-Seems like VRChat API has stopped providing unity packages for your own content so any content uploaded after 24/8/2018 may not be able to be downloaded with this program
+# Final update 1/21/2019
+This project is no longer maintained but I will be looking into rewriting it completely when I have free time again because the current code is made out of spaghetti n.27.
 
 # VRChat Appi
 
@@ -107,6 +103,9 @@ Configure some aspects of the program or clean the world cache in case some worl
 - Friend group entries are stacked vertically
 - Having the program idle for extended periods of time will give you invalid credentials error. This can be fixed by logging out and logging back in or restarting the program.
 - Error handling is nonexistent so if a page appears completely blank or the loading indicator is stuck it means something went wrong. Relogging may or may not fix the issue.
+- When you can't download an avatar the app says it's because of unknown reasons, the actual reason is because the avatar was not uploaded with future proofing on
+- Editing your avatar sometimes gives validation failed error. I have no idea what's causing it but trying again later should fix the issue
+- Trust system is not the same as in game
 
 # Disclaimer
 
